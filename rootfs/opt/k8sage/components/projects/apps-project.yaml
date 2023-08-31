@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+
+metadata:
+  name: apps
+  namespace: argo-cd
+
+spec:
+  description: Apps infrastructure project
+  sourceRepos:
+    - git://host.k3d.internal/applications/
+    - git://host.k3d.internal/applications/*/
+  destinations:
+    - namespace: '*'
+      server: '*'
+  clusterResourceWhitelist:
+    - group: "*"
+      kind: "*"

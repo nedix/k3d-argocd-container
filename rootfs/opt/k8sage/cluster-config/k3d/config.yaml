@@ -1,0 +1,23 @@
+apiVersion: k3d.io/v1alpha5
+kind: Simple
+
+metadata:
+  name: k8sage
+
+servers: 1
+agents: 0
+
+kubeAPI:
+  hostPort: "6445"
+
+options:
+  k3d:
+    disableLoadbalancer: true
+  k3s:
+    extraArgs:
+      - arg: --disable=traefik
+      - arg: --disable=servicelb
+      - arg: --kubelet-arg=eviction-hard=imagefs.available<1%,nodefs.available<1%
+      - arg: --kubelet-arg=eviction-minimum-reclaim=imagefs.available=1%,nodefs.available=1%
+  kubeconfig:
+    updateDefaultKubeconfig: false

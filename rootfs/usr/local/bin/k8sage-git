@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+
+set -e
+
+source /etc/profile
+
+GIT_EMAIL="$(whoami)@k8sage.internal"
+GIT_USER=k8sage
+
+start() {
+    yellow; echo "Starting GIT daemon..."; normal
+    is_first_boot && _create_repositories
+    refresh_submodules
+    run_in_background /usr/bin/git daemon \
+        --export-all \
+        --access-hook="bash k8sage-git refresh_submodules" \
+        --base-path="/opt/git/repositories" \
+        /opt/git/repositories/k8sage/.git \
+        /opt/git/repositories/applications/.git \
+        /opt/git/repositories/applications/*/.git
+    green; echo "GIT daemon started."; normal
+}
+
+stop() {
+    yellow; echo "Stopping GIT daemon..."; normal
+    kill -TERM $(pgrep git-daemon)
+    while pgrep -x git > /dev/null; do
+        sleep 1
+    done
+    green; echo "GIT daemon stopped."; normal
+}
+
+_create_repositories() {
+    yellow; echo "Creating repositories..."; normal
+    mkdir -p /opt/git/repositories/
+    ln -sf {/mnt/applications/,/opt/k8sage/} /opt/git/repositories/
+
+    green; echo "Initializing repository for '/opt/git/repositories/k8sage/'."; normal
+    cd /opt/git/repositories/k8sage/
+    git init -b main
+    git add -A
+    git -c user.name="$GIT_USER" -c user.email="$GIT_EMAIL" commit --allow-empty -m "First commit 🥳"
+
+    green; echo "Initializing repository for '/opt/git/repositories/applications/'."; normal
+    cd /opt/git/repositories/applications/
+    git init -b main
+    git -c user.name="$GIT_USER" -c user.email="$GIT_EMAIL" commit --allow-empty -m "First commit 🥳"
+
+    green; echo "Repositories created."; normal
+}
+
+refresh_submodules() {
+    yellow; echo "Refreshing submodules..."; normal
+    cd /opt/git/repositories/applications/
+
+    for REPO in /opt/git/repositories/applications/*/; do
+        local SUBMODULE="$(basename $REPO)"
+
+        if ! git submodule status --quiet "$SUBMODULE" > /dev/null; then
+            green; echo "Creating submodule '$SUBMODULE'."; normal
+            touch .gitmodules
+            git submodule add --force "git://host.k3d.internal/applications/$SUBMODULE" "$SUBMODULE"
+        fi
+    done
+
+    for SUBMODULE in $(git submodule --quiet foreach "echo $path" || echo ""); do
+        if [ ! -d "$SUBMODULE/.git" ]; then
+            green; echo "Removing submodule '$SUBMODULE' from '$REPO'."; normal
+            git config --remove-section "submodule.$SUBMODULE"
+        fi
+    done
+
+    if [ -n "$(git status --porcelain -uno)" ]; then
+        git -c user.name="$GIT_USER" -c user.email="$GIT_EMAIL" commit -m "Saving submodules."
+    fi
+    green; echo "Submodules refreshed."; normal
+}
+
+if [ "${BASH_SOURCE[0]}" = "$0" ]; then "$1" "${@:2}"; fi

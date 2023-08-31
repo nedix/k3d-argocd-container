@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+set -e
+
+source /etc/profile
+
+start() {
+    yellow; echo "Starting ArgoCD..."; normal
+    is_first_boot && kustomize_apply /opt/k8sage/core/argo-cd/
+    kubectl config set-context --current --namespace=argo-cd
+    argocd login localhost
+    green; echo "ArgoCD started."; normal
+}
+
+if [ "${BASH_SOURCE[0]}" = "$0" ]; then "$1" "${@:2}"; fi

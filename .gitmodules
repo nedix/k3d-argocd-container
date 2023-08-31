@@ -1,0 +1,3 @@
+[submodule "applications/example"]
+	path = applications/example
+	url = ./applications/example/.git

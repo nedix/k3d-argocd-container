@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+set -e
+
+source /etc/profile
+
+start() {
+    yellow; echo "Starting K3D..."; normal
+    is_first_boot && _create_cluster
+    kubectl rollout restart deployment coredns -n kube-system
+    green; echo "K3D started."; normal
+}
+
+_create_cluster() {
+    yellow; echo "Creating cluster..."; normal
+    k3d cluster create -c /opt/k8sage/cluster-config/k3d/config.yaml
+    mkdir -p ~/.kube
+    k3d kubeconfig get k8sage > /mnt/config/k3d/kubeconfig.yaml
+    ln -s /mnt/config/k3d/kubeconfig.yaml ~/.kube/config
+    green; echo "Cluster created."; normal
+}
+
+if [ "${BASH_SOURCE[0]}" = "$0" ]; then "$1" "${@:2}"; fi

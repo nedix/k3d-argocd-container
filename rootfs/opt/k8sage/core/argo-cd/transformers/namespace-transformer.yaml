@@ -1,0 +1,8 @@
+apiVersion: builtin
+kind: NamespaceTransformer
+
+metadata:
+  name: argo-cd-namespace-transformer
+  namespace: argo-cd
+
+setRoleBindingSubjects: allServiceAccounts

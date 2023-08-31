@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+
+source /etc/profile
+
+start() {
+    yellow; echo "Starting k8sage..."; normal
+    _setup_cgroups
+    k8sage-git start
+    k8sage-docker start
+    k8sage-docker wait
+    k8sage-k3d start
+    k8sage-argocd start
+    green; echo "K8sage started."; normal
+}
+
+stop() {
+    yellow; echo "Stopping k8sage..."; normal
+    k8sage-git stop
+    k8sage-docker stop
+    _destroy_cgroups
+    green; echo "K8sage stopped."; normal
+}
+
+_setup_cgroups() {
+    yellow; echo "Setting up cgroups..."; normal
+    mkdir /sys/fs/cgroup/init
+    xargs -rn1 < /sys/fs/cgroup/cgroup.procs > /sys/fs/cgroup/init/cgroup.procs
+    sed -e "s/ / +/g; s/^/+/" < /sys/fs/cgroup/cgroup.controllers > /sys/fs/cgroup/cgroup.subtree_control
+    green; echo "Cgroups set up."; normal
+}
+
+_destroy_cgroups() {
+    yellow; echo "Destroying cgroups..."; normal
+    for CGROUP in init docker; do
+        VOID_CGROUP=$(tr -dc "a-zA-Z0-9" < /dev/urandom | head -c 10)
+        mkdir /sys/fs/cgroup/${VOID_CGROUP}/
+        xargs -rn1 < /sys/fs/cgroup/${CGROUP}/cgroup.procs > /sys/fs/cgroup/${VOID_CGROUP}/cgroup.procs
+        rmdir /sys/fs/cgroup/${CGROUP}
+    done
+    green; echo "Cgroups destroyed."; normal
+}
+
+if [ "${BASH_SOURCE[0]}" = "$0" ]; then "$1" "${@:2}"; fi

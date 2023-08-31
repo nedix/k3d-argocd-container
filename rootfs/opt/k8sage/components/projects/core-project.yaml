@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+
+metadata:
+  name: core
+  namespace: argo-cd
+
+spec:
+  description: Core infrastructure project
+  sourceRepos:
+    - git://host.k3d.internal/k8sage/
+  destinations:
+    - namespace: '*'
+      server: '*'
+  clusterResourceWhitelist:
+    - group: "*"
+      kind: "*"

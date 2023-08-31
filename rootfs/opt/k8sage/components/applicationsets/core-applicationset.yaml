@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+
+metadata:
+  name: core-applicationset
+  namespace: argo-cd
+
+spec:
+  generators:
+    - git:
+        repoURL: git://host.k3d.internal/k8sage/
+        revision: HEAD
+        directories:
+          - path: core/*
+  template:
+    metadata:
+      name: '{{path[1]}}'
+    spec:
+      project: core
+      sources:
+        - repoURL: git://host.k3d.internal/k8sage/
+          path: '{{path}}'
+          targetRevision: HEAD
+      destination:
+        name: in-cluster
+      syncPolicy:
+        automated:
+          selfHeal: true
