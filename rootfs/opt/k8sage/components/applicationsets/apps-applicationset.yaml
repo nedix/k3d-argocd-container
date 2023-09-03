@@ -17,15 +17,18 @@ spec:
       name: '{{path[0]}}-{{path[2]}}'
     spec:
       project: apps
-      sources:
-        - repoURL: 'git://host.k3d.internal/applications/{{path[0]}}/'
-          path: 'overlays/{{path[2]}}'
-          targetRevision: HEAD
+      source:
+        repoURL: 'git://host.k3d.internal/applications/{{path[0]}}/'
+        path: 'overlays/{{path[2]}}'
+        targetRevision: HEAD
+        plugin:
+          name: dry-run-plugin
       destination:
         name: in-cluster
         namespace: '{{path[0]}}-{{path[2]}}'
       syncPolicy:
         syncOptions:
+          - ApplyOutOfSyncOnly=true
           - CreateNamespace=true
         automated:
           prune: true

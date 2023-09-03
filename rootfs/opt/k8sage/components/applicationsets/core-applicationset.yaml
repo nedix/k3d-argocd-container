@@ -17,10 +17,10 @@ spec:
       name: '{{path[1]}}'
     spec:
       project: core
-      sources:
-        - repoURL: git://host.k3d.internal/k8sage/
-          path: '{{path}}'
-          targetRevision: HEAD
+      source:
+        repoURL: git://host.k3d.internal/k8sage/
+        path: '{{path}}'
+        targetRevision: HEAD
       destination:
         name: in-cluster
       syncPolicy:

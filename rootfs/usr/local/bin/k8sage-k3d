@@ -37,7 +37,7 @@ _setup_coredns() {
     kustomize create --namespace kube-system
     kubectl get configmap coredns -n kube-system -o yaml > coredns-configmap.yaml
     kustomize edit add resource coredns-configmap.yaml
-    kustomize edit add patch --kind ConfigMap --patch "[{\"op\": \"add\", \"path\": \"/data/NodeHosts\", \"value\": \"${K3D_GATEWAY} host.k3d.internal\n${K3D_SERVER} k3d-k8sage-server-0\"}]"
+    kustomize edit add patch --kind ConfigMap --patch '[{"op": "replace", "path": "/data/NodeHosts", "value": "'"${K3D_GATEWAY} host.k3d.internal\n${K3D_SERVER} k3d-k8sage-server-0"'"}]'
     kustomize build . | kubectl apply -f -
     kubectl rollout restart deployment -n kube-system coredns
     green; echo "Coredns set up."; normal

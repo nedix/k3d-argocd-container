@@ -4,7 +4,7 @@ kind: Kustomization
 namespace: argo-rollouts
 
 resources:
-  - config/namespace.yaml
+  - resources/namespace.yaml
   - https://raw.githubusercontent.com/argoproj/argo-rollouts/v1.5.1/manifests/install.yaml
   - https://raw.githubusercontent.com/argoproj/argo-rollouts/v1.5.1/manifests/dashboard-install.yaml
   - https://raw.githubusercontent.com/argoproj/argo-rollouts/v1.5.1/manifests/notifications-install.yaml

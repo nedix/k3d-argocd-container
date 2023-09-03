@@ -17,10 +17,12 @@ spec:
       name: '{{path[0]}}-{{path[2]}}-{{path[4]}}'
     spec:
       project: apps
-      sources:
-        - repoURL: 'git://host.k3d.internal/applications/{{path[0]}}/'
-          path: 'applications/{{path[2]}}/overlays/{{path[4]}}'
-          targetRevision: HEAD
+      source:
+        repoURL: 'git://host.k3d.internal/applications/{{path[0]}}/'
+        path: 'applications/{{path[2]}}/overlays/{{path[4]}}'
+        targetRevision: HEAD
+        plugin:
+          name: dry-run-plugin
       destination:
         name: in-cluster
         namespace: '{{path[0]}}-{{path[4]}}'

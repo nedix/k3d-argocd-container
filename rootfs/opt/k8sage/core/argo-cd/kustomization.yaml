@@ -4,9 +4,10 @@ kind: Kustomization
 namespace: argo-cd
 
 resources:
-  - config/namespace.yaml
+  - resources/namespace.yaml
   - https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
   - https://raw.githubusercontent.com/argoproj-labs/rollout-extension/v0.3.1/manifests/install.yaml
+  - https://github.com/nedix/argocd-dry-run-plugin//manifests/resources/?ref=0.1.18
   - secrets/repocreds.yaml
   - ../../components/applicationsets
   - ../../components/projects
@@ -33,3 +34,7 @@ patches:
     target:
       kind: Service
       name: argocd-server
+  - path: https://raw.githubusercontent.com/nedix/argocd-dry-run-plugin/0.1.18/manifests/patches/repo-server.patch.yaml
+    target:
+      kind: Deployment
+      name: argocd-repo-server
