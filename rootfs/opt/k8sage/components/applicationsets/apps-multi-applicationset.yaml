@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 
 metadata:
-  name: app-of-apps-applicationset
+  name: apps-multi-applicationset
   namespace: argo-cd
 
 spec:
@@ -12,8 +12,6 @@ spec:
         revision: HEAD
         directories:
           - path: '*/applications/*/overlays/*'
-          - path: k8sage
-            exclude: true
   template:
     metadata:
       name: '{{path[0]}}-{{path[2]}}-{{path[4]}}'

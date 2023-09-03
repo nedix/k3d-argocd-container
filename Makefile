@@ -1,47 +1,53 @@
-container = k8sage
+container := k8sage
 
 setup:
-	@docker build . -t $(container)
+	@docker build $(CURDIR) -t $(container)
+	@docker volume create $(container)
 
-up: bg =
+destroy:
+	@$(MAKE) down
+	@docker volume rm $(container) || true
+
+fresh:
+	@$(MAKE) destroy
+	@$(MAKE) setup
+
 up:
-	@docker run --rm -i --name $(container) \
+	@docker run --rm -d --name $(container) \
 		--privileged \
-		$(if $(bg),-d,) \
 		-p 6445:6445 \
-		-v $(CURDIR)/config/:/mnt/config/ \
+		-v $(container):/mnt/k8sage \
 		$(foreach application,$(wildcard applications/*/),-v $(CURDIR)/$(application):/mnt/$(application) ) \
 		k8sage
+	@$(MAKE) logs &
+	@while [ $$(docker ps -q -f "name=$(container)" -f "health=healthy" | wc -l) -eq 0 ]; do sleep 1; done
+	@docker cp $(container):/mnt/k8sage/kubeconfig.yaml $(CURDIR)/config/kubeconfig.yaml
 
 down:
-	@docker stop -t-1 $(container)
-	@while [ $$(docker ps -f "name=$(container)" -f "status=removing" -q | wc -l) -gt 0 ]; do sleep 1; done
+	@docker stop -t=-1 $(container) || true
+	@while [ $$(docker ps -q -f "name=$(container)" -f "status=removing" | wc -l) -gt 0 ]; do sleep 1; done
 
-reload: bg =
-reload:
-	@docker exec $(container) k8sage stop
-	@$(eval container_state="$(container)-state")
-	@docker commit $(container) $(container_state)
+restart:
 	@$(MAKE) down
-	@docker image tag $(container_state) $(container)
-	@docker rmi $(container_state)
-	@$(MAKE) up $(if $(bg),bg=yes,)
+	@$(MAKE) up
 
-attach:
+shell:
 	@docker exec -it $(container) bash
 
 logs:
-	@docker logs --follow $(container)
+	@docker logs -fn0 $(container)
 
 link: dir =
 link:
 	@$(eval app=$(shell basename "$(dir)"))
 	@[[ -n "$(dir)" && -d "$(dir)" && "$${dir::1}" = "/" ]] || { echo "Invalid argument: path must be an absolute path to a directory."; exit 1; }
-	@[[ "$(app)" =~ ^(example|k8sage)$$ ]] && { echo "Invalid argument: '$(app)' is a reserved application directory."; exit 1; }
+	@[[ ! "$(app)" =~ ^(k8sage|example|example-multi)$$ ]] || { echo "Invalid argument: '$(app)' is a reserved application directory."; exit 1; }
 	@ln -s "$(dir)" "$(CURDIR)/applications/$(app)"
+	@$(MAKE) restart
 
 unlink: app =
 unlink:
-	@[[ "$(app)" =~ "/" ]] && { echo "Invalid argument: application cannot contain slashes."; exit 1; }
-	@[[ "$(app)" =~ ^(example|k8sage)$$ ]] && { echo "Invalid argument: '$(app)' is a reserved application directory."; exit 1; }
+	@[[ ! "$(app)" =~ "/" ]] || { echo "Invalid argument: application cannot contain slashes."; exit 1; }
+	@[[ ! "$(app)" =~ ^(k8sage|example|example-multi)$$ ]] || { echo "Invalid argument: '$(app)' is a reserved application directory."; exit 1; }
 	@rm -f "$(CURDIR)/applications/$(app)"
+	@$(MAKE) restart

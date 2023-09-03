@@ -8,6 +8,10 @@ normal() {
   echo -en "\e[0m"
 }
 
+red() {
+  echo -en "\e[31m"
+}
+
 green() {
   echo -en "\e[32m"
 }

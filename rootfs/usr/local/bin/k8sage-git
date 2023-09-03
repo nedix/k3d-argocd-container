@@ -9,7 +9,8 @@ GIT_USER=k8sage
 
 start() {
     yellow; echo "Starting GIT daemon..."; normal
-    is_first_boot && _create_repositories
+    _create_symlinks
+    _create_repositories
     refresh_submodules
     run_in_background /usr/bin/git daemon \
         --export-all \
@@ -24,28 +25,44 @@ start() {
 stop() {
     yellow; echo "Stopping GIT daemon..."; normal
     kill -TERM $(pgrep git-daemon)
-    while pgrep -x git > /dev/null; do
+    while pgrep git-daemon > /dev/null; do
         sleep 1
     done
     green; echo "GIT daemon stopped."; normal
 }
 
+_create_symlinks() {
+    yellow; echo "Creating symlinks..."; normal
+    mkdir -p /opt/git/repositories/
+    ln -sf {/opt/k8sage/,/mnt/applications/} /opt/git/repositories/
+    green; echo "Symlinks created."; normal
+}
+
 _create_repositories() {
     yellow; echo "Creating repositories..."; normal
-    mkdir -p /opt/git/repositories/
-    ln -sf {/mnt/applications/,/opt/k8sage/} /opt/git/repositories/
 
-    green; echo "Initializing repository for '/opt/git/repositories/k8sage/'."; normal
+    yellow; echo "Creating repository for '/opt/git/repositories/k8sage/'."; normal
     cd /opt/git/repositories/k8sage/
     git init -b main
     git add -A
-    git -c user.name="$GIT_USER" -c user.email="$GIT_EMAIL" commit --allow-empty -m "First commit 🥳"
+    git -c user.name="$GIT_USER" -c user.email="$GIT_EMAIL" commit -m "Initial commit"
 
-    green; echo "Initializing repository for '/opt/git/repositories/applications/'."; normal
+    yellow; echo "Creating repository for '/opt/git/repositories/applications/'."; normal
     cd /opt/git/repositories/applications/
     git init -b main
-    git -c user.name="$GIT_USER" -c user.email="$GIT_EMAIL" commit --allow-empty -m "First commit 🥳"
+    git -c user.name="$GIT_USER" -c user.email="$GIT_EMAIL" commit --allow-empty -m "Initial commit"
 
+    for REPO in /opt/git/repositories/applications/*/; do
+        if [ -d "${REPO}/.git" ]; then
+            continue
+        fi
+
+        green; echo "Creating repository for '$REPO'."; normal
+        cd "$REPO"
+        git init -b main
+        git add -A
+        git -c user.name="$GIT_USER" -c user.email="$GIT_EMAIL" commit -m "Initial commit"
+    done
     green; echo "Repositories created."; normal
 }
 
@@ -56,7 +73,7 @@ refresh_submodules() {
     for REPO in /opt/git/repositories/applications/*/; do
         local SUBMODULE="$(basename $REPO)"
 
-        if ! git submodule status --quiet "$SUBMODULE" > /dev/null; then
+        if ! git submodule status --quiet "$SUBMODULE" 2> /dev/null; then
             green; echo "Creating submodule '$SUBMODULE'."; normal
             touch .gitmodules
             git submodule add --force "git://host.k3d.internal/applications/$SUBMODULE" "$SUBMODULE"

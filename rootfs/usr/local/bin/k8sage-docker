@@ -6,48 +6,26 @@ source /etc/profile
 
 start() {
     yellow; echo "Starting Docker daemon..."; normal
-    is_first_boot && _create_filesystem
-    _mount_filesystem
-    run_in_background /usr/local/bin/dockerd --data-root /mnt/docker
+    is_first_boot && mkdir /mnt/k8sage/docker
+    run_in_background /usr/local/bin/dockerd --data-root /mnt/k8sage/docker
     green; echo "Docker daemon started."; normal
 }
 
 wait() {
-    yellow; echo "Waiting for Docker to be idle..."; normal
+    yellow; echo "Waiting for Docker to be ready..."; normal
     while (! docker stats --no-stream 2> /dev/null); do
         sleep 1
     done
-    green; echo "Docker is idle."; normal
+    green; echo "Docker is ready."; normal
 }
 
 stop() {
     yellow; echo "Stopping Docker daemon..."; normal
     kill -TERM $(pgrep dockerd)
-    rm /var/run/docker.pid
-    _unmount_filesystem
-    green; echo "Docker daemon stopped."; normal
-}
-
-_create_filesystem() {
-    yellow; echo "Creating filesystem..."; normal
-    mkdir -p /var/lib/k8sage /mnt/docker
-    dd of=/var/lib/k8sage/docker.ext4 bs=1 seek=5G count=0
-    /sbin/mkfs.ext4 /var/lib/k8sage/docker.ext4
-    green; echo "Filesystem created."; normal
-}
-
-_mount_filesystem() {
-    yellow; echo "Mounting filesystem..."; normal
-    /bin/mount -o rw /var/lib/k8sage/docker.ext4 /mnt/docker
-    green; echo "Filesystem mounted."; normal
-}
-
-_unmount_filesystem() {
-    yellow; echo "Unmounting filesystem..."; normal
-    while ! /bin/umount /mnt/docker > /dev/null 2>&1; do
+    while pgrep dockerd > /dev/null; do
         sleep 1
     done
-    green; echo "Filesystem unmounted."; normal
+    green; echo "Docker daemon stopped."; normal
 }
 
 if [ "${BASH_SOURCE[0]}" = "$0" ]; then "$1" "${@:2}"; fi

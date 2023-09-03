@@ -75,6 +75,8 @@ COPY --link --from=kustomize /build/kustomize /usr/local/bin/kustomize
 COPY rootfs/ /
 COPY config/ /mnt/config/
 
-RUN touch /first_boot
-
 ENTRYPOINT ["/entrypoint.sh"]
+
+HEALTHCHECK CMD kubectl get --raw='/readyz?verbose'
+
+EXPOSE 6445

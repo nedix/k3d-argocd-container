@@ -12,8 +12,6 @@ spec:
         revision: HEAD
         directories:
           - path: '*/overlays/*'
-          - path: k8sage
-            exclude: true
   template:
     metadata:
       name: '{{path[0]}}-{{path[2]}}'

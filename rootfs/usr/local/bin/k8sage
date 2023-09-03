@@ -1,15 +1,20 @@
 #!/usr/bin/env bash
 
+set -e
+
 source /etc/profile
 
 start() {
     yellow; echo "Starting k8sage..."; normal
+    _check_volumes
+    _setup_first_boot
     _setup_cgroups
     k8sage-git start
     k8sage-docker start
     k8sage-docker wait
     k8sage-k3d start
     k8sage-argocd start
+    _destroy_first_boot
     green; echo "K8sage started."; normal
 }
 
@@ -19,6 +24,23 @@ stop() {
     k8sage-docker stop
     _destroy_cgroups
     green; echo "K8sage stopped."; normal
+}
+
+_check_volumes() {
+    if [ ! -d /mnt/k8sage/ || df -T /mnt/k8sage/ | awk 'NR==2 && $2 == "fakeowner"' ]; then
+        red; echo "Please mount a named volume on '/mnt/k8sage/'."; normal
+        exit 1
+    fi
+}
+
+_setup_first_boot() {
+    if [ -z "$(ls -A /mnt/k8sage)" ]; then
+        touch /mnt/k8sage/.first_boot
+    fi
+}
+
+_destroy_first_boot() {
+    rm -f /mnt/k8sage/.first_boot
 }
 
 _setup_cgroups() {
