@@ -24,5 +24,11 @@ spec:
       destination:
         name: in-cluster
       syncPolicy:
+        syncOptions:
+          - ApplyOutOfSyncOnly=true
+          - PruneLast=true
+          - Validate=false
         automated:
+          allowEmpty: true
+          prune: true
           selfHeal: true

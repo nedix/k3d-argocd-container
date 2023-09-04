@@ -28,7 +28,13 @@ spec:
         namespace: '{{path[0]}}-{{path[4]}}'
       syncPolicy:
         syncOptions:
+          - ApplyOutOfSyncOnly=true
           - CreateNamespace=true
+          - PruneLast=true
+          - Validate=false
         automated:
+          allowEmpty: true
           prune: true
           selfHeal: true
+        retry:
+          limit: 0
