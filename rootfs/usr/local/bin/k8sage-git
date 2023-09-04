@@ -15,10 +15,9 @@ start() {
     run_in_background /usr/bin/git daemon \
         --export-all \
         --access-hook="bash k8sage-git refresh_submodules" \
-        --base-path="/opt/git/repositories" \
-        /opt/git/repositories/k8sage/.git \
-        /opt/git/repositories/applications/.git \
-        /opt/git/repositories/applications/*/.git
+        --base-path="/mnt/applications" \
+        /mnt/applications/.git \
+        /mnt/applications/*/.git
     green; echo "GIT daemon started."; normal
 }
 
@@ -33,26 +32,19 @@ stop() {
 
 _create_symlinks() {
     yellow; echo "Creating symlinks..."; normal
-    mkdir -p /opt/git/repositories/
-    ln -sf {/opt/k8sage/,/mnt/applications/} /opt/git/repositories/
+    ln -sf /opt/k8sage/ /mnt/applications/
     green; echo "Symlinks created."; normal
 }
 
 _create_repositories() {
     yellow; echo "Creating repositories..."; normal
 
-    yellow; echo "Creating repository for '/opt/git/repositories/k8sage/'."; normal
-    cd /opt/git/repositories/k8sage/
-    git init -b main
-    git add -A
-    git -c user.name="$GIT_USER" -c user.email="$GIT_EMAIL" commit -m "Initial commit"
-
-    yellow; echo "Creating repository for '/opt/git/repositories/applications/'."; normal
-    cd /opt/git/repositories/applications/
+    yellow; echo "Creating repository for '/mnt/applications/'."; normal
+    cd /mnt/applications/
     git init -b main
     git -c user.name="$GIT_USER" -c user.email="$GIT_EMAIL" commit --allow-empty -m "Initial commit"
 
-    for REPO in /opt/git/repositories/applications/*/; do
+    for REPO in /mnt/applications/*/; do
         if [ -d "${REPO}/.git" ]; then
             continue
         fi
@@ -68,15 +60,15 @@ _create_repositories() {
 
 refresh_submodules() {
     yellow; echo "Refreshing submodules..."; normal
-    cd /opt/git/repositories/applications/
+    cd /mnt/applications/
 
-    for REPO in /opt/git/repositories/applications/*/; do
+    for REPO in /mnt/applications/*/; do
         local SUBMODULE="$(basename $REPO)"
 
         if ! git submodule status --quiet "$SUBMODULE" 2> /dev/null; then
             green; echo "Creating submodule '$SUBMODULE'."; normal
             touch .gitmodules
-            git submodule add --force "git://host.k3d.internal/applications/$SUBMODULE" "$SUBMODULE"
+            git submodule add --force "git://host.k3d.internal/$SUBMODULE" "$SUBMODULE"
         fi
     done
 
@@ -88,6 +80,7 @@ refresh_submodules() {
     done
 
     if [ -n "$(git status --porcelain -uno)" ]; then
+        git add .gitmodules
         git -c user.name="$GIT_USER" -c user.email="$GIT_EMAIL" commit -m "Saving submodules."
     fi
     green; echo "Submodules refreshed."; normal

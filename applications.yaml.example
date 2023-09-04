@@ -1,0 +1,8 @@
+applications:
+  - project: apps
+    name: example
+    namespace: example
+    source:
+      repoUrl: git://host.k3d.internal/example/
+      targetRevision: HEAD
+      path: overlays/default/

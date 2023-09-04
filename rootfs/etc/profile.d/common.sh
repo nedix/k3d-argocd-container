@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 
-export PATH=/opt/k8sage/bin:$PATH
-
 is_first_boot() {
-    test -e /mnt/k8sage/.first_boot && return 0 || return 1
+    test -e /mnt/docker/.first_boot && return 0 || return 1
 }
 
 run_in_background() {

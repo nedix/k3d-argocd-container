@@ -6,4 +6,3 @@ namespace: argo-cd
 resources:
   - apps-applicationset.yaml
   - core-applicationset.yaml
-  - apps-multi-applicationset.yaml

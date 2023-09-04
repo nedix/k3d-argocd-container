@@ -6,26 +6,33 @@ metadata:
   namespace: argo-cd
 
 spec:
+  goTemplate: true
+  goTemplateOptions: ['missingkey=error']
   generators:
-    - git:
-        repoURL: git://host.k3d.internal/applications/
-        revision: HEAD
-        directories:
-          - path: '*/overlays/*'
+    - matrix:
+        generators:
+          - git:
+              repoURL: git://host.k3d.internal/k8sage/
+              revision: HEAD
+              files:
+                - path: cluster-config/argo/applications.yaml
+          - list:
+              elements: []
+              elementsYaml: '{{.applications|toJson}}'
   template:
     metadata:
-      name: '{{path[0]}}-{{path[2]}}'
+      name: '{{.name}}'
     spec:
-      project: apps
+      project: '{{default "apps" .project}}'
       source:
-        repoURL: 'git://host.k3d.internal/applications/{{path[0]}}/'
-        path: 'overlays/{{path[2]}}'
-        targetRevision: HEAD
+        repoURL: '{{.source.repoUrl}}'
+        path: '{{.source.path}}'
+        targetRevision: '{{default "HEAD" .source.targetRevision}}'
         plugin:
           name: dry-run-plugin
       destination:
         name: in-cluster
-        namespace: '{{path[0]}}-{{path[2]}}'
+        namespace: '{{.namespace}}'
       syncPolicy:
         syncOptions:
           - ApplyOutOfSyncOnly=true

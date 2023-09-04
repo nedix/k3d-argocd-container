@@ -6,8 +6,7 @@ source /etc/profile
 
 start() {
     yellow; echo "Starting Docker daemon..."; normal
-    is_first_boot && mkdir /mnt/k8sage/docker
-    run_in_background /usr/local/bin/dockerd --data-root /mnt/k8sage/docker
+    run_in_background /usr/local/bin/dockerd --data-root /mnt/docker
     green; echo "Docker daemon started."; normal
 }
 

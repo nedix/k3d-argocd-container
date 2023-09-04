@@ -6,6 +6,8 @@ metadata:
   namespace: argo-cd
 
 spec:
+  goTemplate: true
+  goTemplateOptions: ['missingkey=error']
   generators:
     - git:
         repoURL: git://host.k3d.internal/k8sage/
@@ -14,18 +16,20 @@ spec:
           - path: core/*
   template:
     metadata:
-      name: '{{path[1]}}'
+      name: '{{index .path.segments 1}}'
     spec:
       project: core
       source:
         repoURL: git://host.k3d.internal/k8sage/
-        path: '{{path}}'
+        path: '{{.path.path}}'
         targetRevision: HEAD
       destination:
         name: in-cluster
+        namespace: '{{.path.basename}}'
       syncPolicy:
         syncOptions:
           - ApplyOutOfSyncOnly=true
+          - CreateNamespace=true
           - PruneLast=true
           - Validate=false
         automated:

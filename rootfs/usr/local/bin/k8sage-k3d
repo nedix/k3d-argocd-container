@@ -7,23 +7,17 @@ source /etc/profile
 start() {
     yellow; echo "Starting K3D..."; normal
     is_first_boot && _create_cluster
-    _create_symlinks
     _setup_coredns
     green; echo "K3D started."; normal
 }
 
 _create_cluster() {
     yellow; echo "Creating cluster..."; normal
+    mkdir -p ~/.kube /opt/k8sage/cluster-config/kube
     k3d cluster create -c /opt/k8sage/cluster-config/k3d/config.yaml
-    k3d kubeconfig get k8sage > /mnt/k8sage/kubeconfig.yaml
+    k3d kubeconfig get k8sage > /opt/k8sage/cluster-config/kube/config.yaml
+    ln -s /opt/k8sage/cluster-config/kube/config.yaml ~/.kube/config
     green; echo "Cluster created."; normal
-}
-
-_create_symlinks() {
-    yellow; echo "Creating symlinks..."; normal
-    mkdir ~/.kube
-    ln -s /mnt/k8sage/kubeconfig.yaml ~/.kube/config
-    green; echo "Symlinks created."; normal
 }
 
 _setup_coredns() {
