@@ -7,7 +7,7 @@ source /etc/profile
 start() {
     yellow; echo "Starting K3D..."; normal
     is_first_boot && _create_cluster
-    _setup_coredns
+    run_in_background _setup_coredns
     green; echo "K3D started."; normal
 }
 
@@ -22,17 +22,12 @@ _create_cluster() {
 
 _setup_coredns() {
     yellow; echo "Setting up coredns..."; normal
-    while ! kubectl rollout status deployment -n kube-system coredns 2> /dev/null; do
-        sleep 1
-    done
     local K3D_GATEWAY=$(docker network inspect -f '{{(index .IPAM.Config 0).Gateway}}' k3d-k8sage)
     local K3D_SERVER=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' k3d-k8sage-server-0)
-    cd $(mktemp -d)
-    kustomize create --namespace kube-system
-    kubectl get configmap coredns -n kube-system -o yaml > coredns-configmap.yaml
-    kustomize edit add resource coredns-configmap.yaml
-    kustomize edit add patch --kind ConfigMap --patch '[{"op": "replace", "path": "/data/NodeHosts", "value": "'"${K3D_GATEWAY} host.k3d.internal\n${K3D_SERVER} k3d-k8sage-server-0"'"}]'
-    kustomize build . | kubectl apply -f -
+    while ! kubectl get configmap -n kube-system coredns >/dev/null 2>&1; do
+        sleep 1
+    done
+    kubectl patch configmap -n kube-system coredns --type json -p '[{"op": "replace", "path": "/data/NodeHosts", "value": "'"${K3D_GATEWAY} host.k3d.internal\n${K3D_SERVER} k3d-k8sage-server-0"'"}]'
     kubectl rollout restart deployment -n kube-system coredns
     green; echo "Coredns set up."; normal
 }
