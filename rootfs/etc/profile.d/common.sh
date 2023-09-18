@@ -1,13 +1,17 @@
 #!/usr/bin/env bash
 
+BACKGROUND_PIDS=()
+
 is_first_boot() {
     test -e /mnt/docker/.first_boot && return 0 || return 1
 }
 
 run_in_background() {
-    "$1" "${@:2}" &
+    "$1" "${@:2}" 2>&1 &
 
-    trap "kill -TERM $!" TERM INT
+    BACKGROUND_PIDS+=("$!")
+
+    trap "kill -TERM ${BACKGROUND_PIDS[-1]} 2>/dev/null" TERM INT
 }
 
 kustomize_apply() {
