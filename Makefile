@@ -1,6 +1,7 @@
 container := k8sage
 
 setup:
+	@test -s applications.yaml || cp applications.yaml.example applications.yaml
 	@docker build $(CURDIR) -t $(container)
 	@docker volume create $(container)
 
@@ -13,7 +14,6 @@ fresh:
 	@$(MAKE) setup
 
 up:
-	@test -s applications.yaml || cp applications.yaml.example applications.yaml
 	@docker run --rm -d --name $(container) \
 		--privileged \
 		-p 6445:6445 \
@@ -43,14 +43,14 @@ link: dir :=
 link: app :=
 link:
 	@$(eval app := $(shell basename "$(dir)"))
-	@[[ -n "$(dir)" && -d "$(dir)" && "$${dir::1}" = "/" ]] || { echo "Invalid argument: path must be an absolute path to a directory."; exit 1; }
-	@[[ ! "$(app)" =~ ^(k8sage|example)$$ ]] || { echo "Invalid argument: '$(app)' is a reserved application directory."; exit 1; }
+	@[[ -n "$(dir)" && -d "$(dir)" && "$${dir::1}" = "/" ]] || { echo "Invalid argument (dir): argument must be an absolute path to a directory."; exit 1; }
+	@[[ ! "$(app)" =~ ^(k8sage|example)$$ ]] || { echo "Invalid argument (app): '$(app)' is a reserved application directory."; exit 1; }
 	@ln -s "$(dir)" "$(CURDIR)/applications/$(app)"
 	@$(MAKE) restart
 
 unlink: app :=
 unlink:
-	@[[ ! "$(app)" =~ "/" ]] || { echo "Invalid argument: application cannot contain slashes."; exit 1; }
-	@[[ ! "$(app)" =~ ^(k8sage|example)$$ ]] || { echo "Invalid argument: '$(app)' is a reserved application directory."; exit 1; }
+	@[[ ! "$(app)" =~ "/" ]] || { echo "Invalid argument (app): argument should not contain slashes."; exit 1; }
+	@[[ ! "$(app)" =~ ^(k8sage|example)$$ ]] || { echo "Invalid argument (app): '$(app)' is a reserved application directory."; exit 1; }
 	@rm -f "$(CURDIR)/applications/$(app)"
 	@$(MAKE) restart
