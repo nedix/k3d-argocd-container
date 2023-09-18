@@ -7,6 +7,7 @@ source /etc/profile
 start() {
     yellow; echo "Starting K3D..."; normal
     is_first_boot && _create_cluster
+    _setup_kube_config
     run_in_background _setup_coredns
     green; echo "K3D started."; normal
 }
@@ -15,9 +16,14 @@ _create_cluster() {
     yellow; echo "Creating cluster..."; normal
     mkdir -p ~/.kube /opt/k8sage/cluster-config/kube
     k3d cluster create -c /opt/k8sage/cluster-config/k3d/config.yaml
+    green; echo "Cluster created."; normal
+}
+
+_setup_kube_config() {
+    yellow; echo "Setting up Kubernetes config..."; normal
     k3d kubeconfig get k8sage > /opt/k8sage/cluster-config/kube/config.yaml
     ln -s /opt/k8sage/cluster-config/kube/config.yaml ~/.kube/config
-    green; echo "Cluster created."; normal
+    green; echo "Kubernetes config created."; normal
 }
 
 _setup_coredns() {
