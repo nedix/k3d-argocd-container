@@ -28,5 +28,5 @@ kustomize_apply() {
 }
 
 argocd() {
-    command argocd --core "$@"
+    command argocd --core "${@:2}"
 }
