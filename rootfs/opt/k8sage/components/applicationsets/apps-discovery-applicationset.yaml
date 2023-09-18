@@ -1,0 +1,57 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+
+metadata:
+  name: apps-discovery-applicationset
+  namespace: argo-cd
+
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  applyNestedSelectors: true
+  generators:
+    - matrix:
+        generators:
+          - matrix:
+              generators:
+                - git:
+                    repoURL: git://host.k3d.internal/k8sage/
+                    revision: HEAD
+                    files:
+                      - path: cluster-config/argo/applications.yaml
+                    pathParamPrefix: applications
+                - list:
+                    elements: []
+                    elementsYaml: "{{.discovery | toJson}}"
+          - git:
+              repoURL: git://host.k3d.internal/
+              revision: HEAD
+              directories:
+                - path: "*/overlays/{{.overlay}}"
+                - path: "*/applications/*/overlays/{{.overlay}}"
+  template:
+    metadata:
+      name: '{{regexReplaceAll "/applications/|/overlays/" .path.path "-"}}'
+    spec:
+      project: apps
+      source:
+        repoURL: "git://host.k3d.internal/{{first .path.segments}}"
+        path: '{{slice .path.segments 1 | join "/"}}'
+        targetRevision: HEAD
+        plugin:
+          name: skip-crds-plugin
+      destination:
+        name: in-cluster
+        namespace: "{{first .path.segments}}-{{.overlay}}"
+      syncPolicy:
+        syncOptions:
+          - ApplyOutOfSyncOnly=true
+          - CreateNamespace=true
+          - PruneLast=true
+          - Validate=false
+        automated:
+          allowEmpty: true
+          prune: true
+          selfHeal: true
+        retry:
+          limit: 0

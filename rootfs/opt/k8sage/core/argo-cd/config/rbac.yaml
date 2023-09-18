@@ -5,10 +5,13 @@ metadata:
   name: argocd-rbac-cm
 
 data:
-  policy.default: ''
+  policy.default: "role:dev"
   policy.csv: |
-    p, role:dev, applications, get, app/*, allow
-    g, maintainer, role:admin
-    g, maintainer, role:dev
-    g, dev, role:dev
-    g, external, role:readonly
+    p, role:dev, applications, *, */*, allow
+    p, role:dev, applications, *, core/*, deny
+    p, role:dev, clusters, get, *, allow
+    p, role:dev, exec, create, */*, allow
+    p, role:dev, logs, get, *, allow
+    p, role:dev, projects, *, *, allow
+    p, role:dev, repositories, *, *, allow
+    p, role:admin, exec, create, */*, allow

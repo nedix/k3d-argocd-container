@@ -1,6 +1,8 @@
-applications:
-  - project: apps
-    name: example
+discovery:
+  - overlay: default
+
+registry:
+  - name: example
     namespace: example
     source:
       repoUrl: git://host.k3d.internal/example/

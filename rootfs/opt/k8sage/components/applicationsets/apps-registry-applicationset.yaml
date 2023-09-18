@@ -2,12 +2,12 @@ apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 
 metadata:
-  name: apps-applicationset
+  name: apps-registry-applicationset
   namespace: argo-cd
 
 spec:
   goTemplate: true
-  goTemplateOptions: ['missingkey=error']
+  goTemplateOptions: ["missingkey=error"]
   generators:
     - matrix:
         generators:
@@ -16,23 +16,24 @@ spec:
               revision: HEAD
               files:
                 - path: cluster-config/argo/applications.yaml
+              pathParamPrefix: applications
           - list:
               elements: []
-              elementsYaml: '{{.applications|toJson}}'
+              elementsYaml: "{{.registry | toJson}}"
   template:
     metadata:
-      name: '{{.name}}'
+      name: "{{.name}}"
     spec:
-      project: '{{default "apps" .project}}'
+      project: apps
       source:
-        repoURL: '{{.source.repoUrl}}'
-        path: '{{.source.path}}'
+        repoURL: "{{.source.repoUrl}}"
+        path: "{{.source.path}}"
         targetRevision: '{{default "HEAD" .source.targetRevision}}'
         plugin:
-          name: dry-run-plugin
+          name: skip-crds-plugin
       destination:
         name: in-cluster
-        namespace: '{{.namespace}}'
+        namespace: "{{.namespace}}"
       syncPolicy:
         syncOptions:
           - ApplyOutOfSyncOnly=true

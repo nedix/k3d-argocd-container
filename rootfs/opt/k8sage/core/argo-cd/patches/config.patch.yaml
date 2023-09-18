@@ -1,8 +1,8 @@
 - op: add
   path: /data
   value:
-    accounts.maintainer: apiKey, login
-    accounts.dev: login
-    accounts.external: login
-    kustomize.buildOptions: --enable-helm
+    applicationsetcontroller.enable.new.git.file.globbing: "true"
     controller.status.processors: "100"
+    exec.enabled: "true"
+    kustomize.buildOptions: --enable-helm
+    users.anonymous.enabled: "true"

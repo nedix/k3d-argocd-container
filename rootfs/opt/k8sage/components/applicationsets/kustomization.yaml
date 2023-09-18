@@ -4,5 +4,6 @@ kind: Kustomization
 namespace: argo-cd
 
 resources:
-  - apps-applicationset.yaml
+  - apps-discovery-applicationset.yaml
+  - apps-registry-applicationset.yaml
   - core-applicationset.yaml
