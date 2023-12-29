@@ -17,7 +17,7 @@ start() {
     run_in_background /usr/bin/git daemon \
         --informative-errors \
         --export-all \
-        --access-hook="k8sage-git refresh_submodules 1>/dev/null 2>${LOG_FILE}" \
+        --access-hook="/opt/k8sage/bin/git refresh_submodules 1>/dev/null 2>${LOG_FILE}" \
         --base-path="/mnt/applications" \
         /mnt/applications/.git \
         /mnt/applications/*/.git

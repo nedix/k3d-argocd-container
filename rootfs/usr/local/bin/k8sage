@@ -9,19 +9,19 @@ start() {
     _check_volumes
     _setup_first_boot
     _setup_cgroups
-    k8sage-git start
-    k8sage-docker start
-    k8sage-docker wait
-    k8sage-k3d start
-    k8sage-argocd start
+    /opt/k8sage/bin/git start
+    /opt/k8sage/bin/docker start
+    /opt/k8sage/bin/docker wait
+    /opt/k8sage/bin/k3d start
+    /opt/k8sage/bin/argocd start
     _destroy_first_boot
     green; echo "K8sage started."; normal
 }
 
 stop() {
     yellow; echo "Stopping k8sage..."; normal
-    k8sage-git stop
-    k8sage-docker stop
+    /opt/k8sage/bin/git stop
+    /opt/k8sage/bin/docker stop
     _destroy_cgroups
     green; echo "K8sage stopped."; normal
 }
