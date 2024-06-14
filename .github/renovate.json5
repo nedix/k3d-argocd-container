@@ -1,0 +1,33 @@
+{
+  baseBranches: [
+    "main",
+    "/^release\\/.*/",
+  ],
+  enabledManagers: [
+    "custom.regex",
+    "github-actions",
+  ],
+  customManagers: [
+    {
+      depNameTemplate: "K3D",
+      fileMatch: ["^Dockerfile$"],
+      matchStrings: ["ARG ALPINE_VERSION=(?<currentValue>.*?)\\n"],
+      datasourceTemplate: "github-tags",
+      packageNameTemplate: "k3d-io/k3d",
+    },
+    {
+      depNameTemplate: "Kubernetes Tools",
+      fileMatch: ["^Dockerfile$"],
+      matchStrings: ["ARG KUBERNETES_TOOLS_VERSION=(?<currentValue>.*?)\\n"],
+      datasourceTemplate: "github-tags",
+      packageNameTemplate: "nedix/kubernetes-tools-docker",
+    }
+  ],
+  packageRules: [
+    {
+      description: "Disable grouping for all dependencies",
+      matchPackagePatterns: [".*"],
+      groupName: null,
+    },
+  ],
+}

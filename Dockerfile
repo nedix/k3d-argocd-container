@@ -1,6 +1,9 @@
-FROM --platform=$BUILDPLATFORM ghcr.io/nedix/kubernetes-tools-docker:v2.0.1-scratch as tools
+ARG K3D_VERSION=5.5.2-dind
+ARG KUBERNETES_TOOLS_VERSION=2.0.1
 
-FROM ghcr.io/k3d-io/k3d:5.5.2-dind
+FROM --platform=$BUILDPLATFORM ghcr.io/nedix/kubernetes-tools-docker:v${KUBERNETES_TOOLS_VERSION}-scratch as tools
+
+FROM ghcr.io/k3d-io/k3d:${K3D_VERSION}
 
 COPY --chown=nobody --from=tools / /
 
