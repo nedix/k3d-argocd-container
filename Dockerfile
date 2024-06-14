@@ -1,7 +1,7 @@
 ARG K3D_VERSION=5.5.2-dind
-ARG KUBERNETES_TOOLS_VERSION=2.0.1
+ARG KUBERNETES_TOOLS_VERSION=v2.0.1-scratch
 
-FROM --platform=$BUILDPLATFORM ghcr.io/nedix/kubernetes-tools-docker:v${KUBERNETES_TOOLS_VERSION}-scratch as tools
+FROM --platform=$BUILDPLATFORM ghcr.io/nedix/kubernetes-tools-docker:${KUBERNETES_TOOLS_VERSION} as tools
 
 FROM ghcr.io/k3d-io/k3d:${K3D_VERSION}
 
