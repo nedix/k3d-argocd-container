@@ -16,12 +16,12 @@
       packageNameTemplate: "k3d-io/k3d",
     },
     {
-      depNameTemplate: "Kubernetes Tools",
+      depNameTemplate: "Tools",
       fileMatch: ["^Dockerfile$"],
       matchStrings: ["ARG TOOLS_VERSION=(?<currentValue>.*?)\\n"],
       datasourceTemplate: "github-tags",
       packageNameTemplate: "nedix/kubernetes-tools-docker",
-    }
+    },
   ],
   packageRules: [
     {
