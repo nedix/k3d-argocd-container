@@ -18,7 +18,7 @@
     {
       depNameTemplate: "Kubernetes Tools",
       fileMatch: ["^Dockerfile$"],
-      matchStrings: ["ARG KUBERNETES_TOOLS_VERSION=(?<currentValue>.*?)\\n"],
+      matchStrings: ["ARG TOOLS_VERSION=(?<currentValue>.*?)\\n"],
       datasourceTemplate: "github-tags",
       packageNameTemplate: "nedix/kubernetes-tools-docker",
     }
