@@ -11,7 +11,7 @@
     {
       depNameTemplate: "K3D",
       fileMatch: ["^Dockerfile$"],
-      matchStrings: ["ARG ALPINE_VERSION=(?<currentValue>.*?)\\n"],
+      matchStrings: ["ARG K3D_VERSION=(?<currentValue>.*?)\\n"],
       datasourceTemplate: "github-tags",
       packageNameTemplate: "k3d-io/k3d",
     },
