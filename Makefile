@@ -4,7 +4,7 @@ VOLUME := k8sage
 setup:
 	@docker build $(CURDIR) -t $(CONTAINER)
 	@docker volume create $(VOLUME)
-	@test -s config/applications.yaml || cp config/applications.yaml.example config/applications.yaml
+	@test -s applications.yaml || cp applications.yaml.example applications.yaml
 
 destroy:
 	@$(MAKE) down
@@ -15,15 +15,15 @@ up: KUBERNETES_PORT = 6445
 up:
 	@docker run --rm -d --name $(CONTAINER) \
 		--privileged \
-		--mount "type=bind,source=$(CURDIR)/config/applications.yaml,target=/mnt/config/applications.yaml" \
-		-v $(CURDIR)/config/applications:/mnt/applications \
+		--mount "type=bind,source=$(CURDIR)/applications.yaml,target=/mnt/config/applications.yaml" \
+		-v $(CURDIR)/applications:/mnt/applications \
 		-v $(VOLUME):/mnt/docker \
 		-p $(ARGOCD_PORT):443 \
 		-p $(KUBERNETES_PORT):6445 \
 		k8sage
 	@docker logs -fn0 $(CONTAINER)
 	@while [ $$(docker ps -q -f "name=$(CONTAINER)" -f "health=healthy" | wc -l) -eq 0 ]; do sleep 1; done
-	@docker cp $(CONTAINER):/etc/k8sage/cluster-config/kube/config.yaml $(CURDIR)/output/kubeconfig.yaml
+	@docker cp $(CONTAINER):/etc/k8sage/cluster-config/kube/config.yaml $(CURDIR)/kubeconfig.yaml
 
 down:
 	@docker stop -t=-1 $(CONTAINER) || true
