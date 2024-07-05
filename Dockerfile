@@ -28,7 +28,7 @@ RUN test -n "$ARCHITECTURE" || case $(uname -m) in \
         bash \
         git-daemon \
     && curl -fsSL https://github.com/argoproj/argo-cd/releases/download/${ARGOCD_VERSION}/argocd-linux-${ARCHITECTURE} -o /usr/local/bin/argocd \
-    && curl -fsSL https://get.helm.sh/helm-${HELM_VERSION}-linux-${ARCHITECTURE}.tar.gz \
+    && curl -fsSL https://github.com/helm/helm/releases/download/v${HELM_VERSION}/helm-${HELM_VERSION}-linux-${ARCHITECTURE}.tar.gz \
     | tar xzOf - linux-${ARCHITECTURE}/helm > /usr/local/bin/helm \
     && curl -fsSL https://github.com/ryane/kfilt/releases/download/v${KFILT_VERSION}/kfilt_${KFILT_VERSION}_linux_${ARCHITECTURE} -o /usr/local/bin/kfilt \
     && curl -fsSL https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2F${KUSTOMIZE_VERSION}/kustomize_${KUSTOMIZE_VERSION}_linux_${ARCHITECTURE}.tar.gz \
