@@ -2,14 +2,13 @@ apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 
 metadata:
-  name: apps
+  name: applications
   namespace: argo-cd
 
 spec:
-  description: Apps infrastructure project
+  description: Applications infrastructure project
   sourceRepos:
-    - '!git://host.k3d.internal/k8sage/'
-    - '*'
+    - 'git://host.k3d.internal/applications/*/'
   destinations:
     - namespace: '!default'
       server: '*'
@@ -22,7 +21,7 @@ spec:
     - namespace: '*'
       server: '*'
   clusterResourceWhitelist:
-    - group: "*"
-      kind: "*"
+    - group: '*'
+      kind: '*'
   orphanedResources:
     warn: true

@@ -7,25 +7,25 @@ metadata:
 
 spec:
   goTemplate: true
-  goTemplateOptions: ["missingkey=error"]
+  goTemplateOptions: ['missingkey=error']
   generators:
     - git:
-        repoURL: git://host.k3d.internal/k8sage/
+        repoURL: git://host.k3d.internal/core/
         revision: HEAD
         directories:
-          - path: core/*
+          - path: '*'
   template:
     metadata:
-      name: "{{index .path.segments 1}}"
+      name: '{{.path.basename}}'
     spec:
       project: core
       source:
-        repoURL: git://host.k3d.internal/k8sage/
-        path: "{{.path.path}}"
+        repoURL: git://host.k3d.internal/core/
+        path: '{{.path.path}}'
         targetRevision: HEAD
       destination:
         name: in-cluster
-        namespace: "{{.path.basename}}"
+        namespace: '{{.path.basename}}'
       syncPolicy:
         syncOptions:
           - ApplyOutOfSyncOnly=true

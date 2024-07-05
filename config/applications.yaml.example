@@ -1,10 +1,7 @@
-discovery:
-  - overlay: default
-
 registry:
   - name: example
     namespace: example
     source:
-      repoUrl: git://host.k3d.internal/example/
+      repoUrl: git://host.k3d.internal/applications/example/
       targetRevision: HEAD
       path: overlays/default/

@@ -8,11 +8,11 @@ metadata:
 spec:
   description: Core infrastructure project
   sourceRepos:
-    - git://host.k3d.internal/k8sage/
+    - 'git://host.k3d.internal/core/'
   destinations:
-    - namespace: argo-cd
+    - namespace: 'argo-cd'
       server: '*'
-    - namespace: argo-rollouts
+    - namespace: 'argo-rollouts'
       server: '*'
   clusterResourceWhitelist:
     - group: "*"

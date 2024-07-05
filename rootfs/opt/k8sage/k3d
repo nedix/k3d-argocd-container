@@ -6,35 +6,45 @@ source /etc/profile
 
 start() {
     yellow; echo "Starting K3D..."; normal
+
     is_first_boot && _create_cluster
     _setup_kube_config
     run_in_background _setup_coredns
+
     green; echo "K3D started."; normal
 }
 
 _create_cluster() {
     yellow; echo "Creating cluster..."; normal
-    mkdir -p ~/.kube /opt/k8sage/cluster-config/kube
-    k3d cluster create -c /opt/k8sage/cluster-config/k3d/config.yaml
+
+    mkdir -p ~/.kube/ /etc/k8sage/cluster-config/kube/
+    k3d cluster create -c /etc/k8sage/cluster-config/k3d/config.yaml
+
     green; echo "Cluster created."; normal
 }
 
 _setup_kube_config() {
     yellow; echo "Setting up Kubernetes config..."; normal
-    k3d kubeconfig get k8sage > /opt/k8sage/cluster-config/kube/config.yaml
-    ln -s /opt/k8sage/cluster-config/kube/config.yaml ~/.kube/config
+
+    k3d kubeconfig get k8sage > /etc/k8sage/cluster-config/kube/config.yaml
+    ln -s /etc/k8sage/cluster-config/kube/config.yaml ~/.kube/config
+
     green; echo "Kubernetes config created."; normal
 }
 
 _setup_coredns() {
     yellow; echo "Setting up coredns..."; normal
+
     local K3D_GATEWAY=$(docker network inspect -f '{{(index .IPAM.Config 0).Gateway}}' k3d-k8sage)
     local K3D_SERVER=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' k3d-k8sage-server-0)
+
     while ! kubectl get configmap -n kube-system coredns >/dev/null 2>&1; do
         sleep 1
     done
+
     kubectl patch configmap -n kube-system coredns --type json -p '[{"op": "replace", "path": "/data/NodeHosts", "value": "'"${K3D_GATEWAY} host.k3d.internal\n${K3D_SERVER} k3d-k8sage-server-0"'"}]'
     kubectl rollout restart deployment -n kube-system coredns
+
     green; echo "Coredns set up."; normal
 }
 

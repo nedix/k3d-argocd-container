@@ -2,38 +2,38 @@ apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 
 metadata:
-  name: apps-registry-applicationset
+  name: apps-applicationset
   namespace: argo-cd
 
 spec:
   goTemplate: true
-  goTemplateOptions: ["missingkey=error"]
+  goTemplateOptions: ['missingkey=error']
   generators:
     - matrix:
         generators:
           - git:
-              repoURL: git://host.k3d.internal/k8sage/
+              repoURL: git://host.k3d.internal/config/
               revision: HEAD
               files:
-                - path: cluster-config/argo/applications.yaml
+                - path: applications.yaml
               pathParamPrefix: applications
           - list:
               elements: []
-              elementsYaml: "{{.registry | toJson}}"
+              elementsYaml: '{{.registry | toJson}}'
   template:
     metadata:
-      name: "{{.name}}"
+      name: '{{.name}}'
     spec:
-      project: apps
+      project: applications
       source:
-        repoURL: "{{.source.repoUrl}}"
-        path: "{{.source.path}}"
+        repoURL: '{{.source.repoUrl}}'
+        path: '{{.source.path}}'
         targetRevision: '{{default "HEAD" .source.targetRevision}}'
         plugin:
           name: skip-crds-plugin
       destination:
         name: in-cluster
-        namespace: "{{.namespace}}"
+        namespace: '{{.namespace}}'
       syncPolicy:
         syncOptions:
           - ApplyOutOfSyncOnly=true

@@ -1,2 +1,4 @@
-applications.yaml
-kubeconfig.yaml
+config/applications.yaml
+config/applications/*
+output/kubeconfig.yaml
+!config/applications/example

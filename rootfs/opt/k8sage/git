@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+
+set -e
+
+source /etc/profile
+
+GIT_EMAIL=k8sage@host.k3d.internal
+GIT_USER=k8sage
+
+start() {
+    yellow; echo "Starting GIT daemon..."; normal
+
+    _setup_repositories
+    LOG_FILE="$(mktemp -u)"
+    mkfifo "$LOG_FILE"
+    run_in_background /usr/bin/git daemon \
+        --informative-errors \
+        --export-all \
+        --base-path="/var/git/repositories" \
+        /var/git/repositories/applications/*/.git \
+        /var/git/repositories/config/.git \
+        /var/git/repositories/core/.git
+    run_in_background tail -f "$LOG_FILE"
+
+    green; echo "GIT daemon started."; normal
+}
+
+stop() {
+    yellow; echo "Stopping GIT daemon..."; normal
+
+    kill -TERM $(pgrep git-daemon)
+    while pgrep git-daemon > /dev/null; do
+        sleep 1
+    done
+
+    green; echo "GIT daemon stopped."; normal
+}
+
+_setup_repositories() {
+    yellow; echo "Setting up repositories..."; normal
+
+    mkdir -p /var/git/repositories/{config,core}/
+
+    yellow; echo "Setting up 'applications' repositories..."; normal
+    ln -s /mnt/applications/ /var/git/repositories/
+
+    yellow; echo "Setting up 'config' repository..."; normal
+    cp /mnt/config/applications.yaml /var/git/repositories/config/
+    cd /var/git/repositories/config/
+    git init -b main
+    git add applications.yaml
+    git -c user.name="$GIT_USER" -c user.email="$GIT_EMAIL" commit -m "Initial commit"
+
+    yellow; echo "Setting up 'core' repository..."; normal
+    cp -R /etc/k8sage/core/ /var/git/repositories/
+    cd /var/git/repositories/core/
+    git init -b main
+    git add .
+    git -c user.name="$GIT_USER" -c user.email="$GIT_EMAIL" commit -m "Initial commit"
+
+    green; echo "Repositories setup."; normal
+}
+
+if [ "${BASH_SOURCE[0]}" = "$0" ]; then "$1" "${@:2}"; fi

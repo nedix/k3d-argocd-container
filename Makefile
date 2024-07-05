@@ -1,56 +1,33 @@
-container := k8sage
+CONTAINER := k8sage
+VOLUME := k8sage
 
 setup:
-	@test -s applications.yaml || cp applications.yaml.example applications.yaml
-	@docker build $(CURDIR) -t $(container)
-	@docker volume create $(container)
+	@docker build $(CURDIR) -t $(CONTAINER)
+	@docker volume create $(VOLUME)
+	@test -s config/applications.yaml || cp config/applications.yaml.example config/applications.yaml
 
 destroy:
 	@$(MAKE) down
-	@docker volume rm $(container) || true
+	@docker volume rm $(VOLUME) || true
 
-fresh:
-	@$(MAKE) destroy
-	@$(MAKE) setup
-
+up: ARGOCD_PORT = 443
+up: KUBERNETES_PORT = 6445
 up:
-	@docker run --rm -d --name $(container) \
+	@docker run --rm -d --name $(CONTAINER) \
 		--privileged \
-		-p 6445:6445 \
-		-v $(container):/mnt/docker \
-		--mount type=bind,source="$(CURDIR)"/applications.yaml,target=/opt/k8sage/cluster-config/argo/applications.yaml \
-		$(foreach application,$(wildcard applications/*/),-v $(CURDIR)/$(application):/mnt/$(application) ) \
+		--mount "type=bind,source=$(CURDIR)/config/applications.yaml,target=/mnt/config/applications.yaml" \
+		-v $(CURDIR)/config/applications:/mnt/applications \
+		-v $(VOLUME):/mnt/docker \
+		-p $(ARGOCD_PORT):443 \
+		-p $(KUBERNETES_PORT):6445 \
 		k8sage
-	@$(MAKE) logs &
-	@while [ $$(docker ps -q -f "name=$(container)" -f "health=healthy" | wc -l) -eq 0 ]; do sleep 1; done
-	@docker cp $(container):/opt/k8sage/cluster-config/kube/config.yaml $(CURDIR)/kubeconfig.yaml
+	@docker logs -fn0 $(CONTAINER)
+	@while [ $$(docker ps -q -f "name=$(CONTAINER)" -f "health=healthy" | wc -l) -eq 0 ]; do sleep 1; done
+	@docker cp $(CONTAINER):/etc/k8sage/cluster-config/kube/config.yaml $(CURDIR)/output/kubeconfig.yaml
 
 down:
-	@docker stop -t=-1 $(container) || true
-	@while [ $$(docker ps -q -f "name=$(container)" -f "status=removing" | wc -l) -gt 0 ]; do sleep 1; done
-
-restart:
-	@$(MAKE) down
-	@$(MAKE) up
+	@docker stop -t=-1 $(CONTAINER) || true
+	@while [ $$(docker ps -q -f "name=$(CONTAINER)" -f "status=removing" | wc -l) -gt 0 ]; do sleep 1; done
 
 shell:
-	@docker exec -it $(container) bash
-
-logs:
-	@docker logs -fn0 $(container)
-
-link: dir :=
-link: app :=
-link:
-	@$(eval app := $(shell basename "$(dir)"))
-	@[[ -n "$(dir)" && -d "$(dir)" && "$${dir::1}" = "/" ]] || { echo "Invalid argument (dir): argument must be an absolute path to a directory."; exit 1; }
-	@[[ ! "$(app)" =~ ^(k8sage|example)$$ ]] || { echo "Invalid argument (app): '$(app)' is a reserved application directory."; exit 1; }
-	@ln -s "$(dir)" "$(CURDIR)/applications/$(app)"
-	@$(MAKE) restart
-
-unlink: app :=
-unlink:
-	@[[ ! "$(app)" =~ "/" ]] || { echo "Invalid argument (app): argument should not contain slashes."; exit 1; }
-	@[[ ! "$(app)" =~ ^(k8sage|example)$$ ]] || { echo "Invalid argument (app): '$(app)' is a reserved application directory."; exit 1; }
-	@rm -f "$(CURDIR)/applications/$(app)"
-	@$(MAKE) restart
+	@docker exec -it $(CONTAINER) bash
