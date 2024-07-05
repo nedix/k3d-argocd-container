@@ -1,4 +1,4 @@
-ARG K3D_VERSION=5.6.3-dind
+ARG K3D_VERSION=5.7.1-dind
 ARG TOOLS_VERSION=v0.68.0
 
 FROM --platform=$BUILDPLATFORM ghcr.io/nedix/kubernetes-tools-docker:${TOOLS_VERSION} as tools
