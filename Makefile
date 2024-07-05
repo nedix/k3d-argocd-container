@@ -1,14 +1,14 @@
 CONTAINER := k8sage
-VOLUME := k8sage
+DOCKER_VOLUME := k8sage
 
 setup:
 	@docker build $(CURDIR) -t $(CONTAINER)
-	@docker volume create $(VOLUME)
+	@docker volume create $(DOCKER_VOLUME)
 	@test -s applications.yaml || cp applications.yaml.example applications.yaml
 
 destroy:
 	@$(MAKE) down
-	@docker volume rm $(VOLUME) || true
+	@docker volume rm $(DOCKER_VOLUME) || true
 
 up: ARGOCD_PORT = 443
 up: KUBERNETES_PORT = 6445
@@ -17,7 +17,7 @@ up:
 		--privileged \
 		--mount "type=bind,source=$(CURDIR)/applications.yaml,target=/mnt/config/applications.yaml" \
 		-v $(CURDIR)/applications:/mnt/applications \
-		-v $(VOLUME):/mnt/docker \
+		-v $(DOCKER_VOLUME):/mnt/docker \
 		-p $(ARGOCD_PORT):443 \
 		-p $(KUBERNETES_PORT):6445 \
 		k8sage
