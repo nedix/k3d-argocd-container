@@ -2,7 +2,7 @@
 
 Kubernetes with Argo CD as a container. Can be used to test infrastructure code locally.
 
-## Usage
+## Setup
 
 ### Summary
 
@@ -78,7 +78,7 @@ Flags:
 --privileged
 ```
 
-## Access
+## Usage
 
 ### Argo CD GUI
 
