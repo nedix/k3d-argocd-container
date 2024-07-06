@@ -16,10 +16,10 @@ spec:
               revision: HEAD
               files:
                 - path: applications.yaml
-              pathParamPrefix: applications
+              pathParamPrefix: void
           - list:
               elements: []
-              elementsYaml: '{{.registry | toJson}}'
+              elementsYaml: '{{.applications | toJson}}'
   template:
     metadata:
       name: '{{.name}}'
