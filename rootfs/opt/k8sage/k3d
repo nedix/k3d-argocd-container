@@ -26,6 +26,7 @@ _create_cluster() {
 _setup_kube_config() {
     yellow; echo "Setting up Kubernetes config..."; normal
 
+    mkdir -p /etc/k8sage/cluster-config/kube/
     k3d kubeconfig get k8sage > /etc/k8sage/cluster-config/kube/config.yaml
     ln -s /etc/k8sage/cluster-config/kube/config.yaml ~/.kube/config
 
