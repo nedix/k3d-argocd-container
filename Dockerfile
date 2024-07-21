@@ -1,11 +1,11 @@
 ARG ARCHITECTURE
-ARG ARGOCD_VERSION=v2.11.3
+ARG ARGOCD_VERSION=2.11.3
 ARG HELM_VERSION=3.15.2
-ARG K3D_VERSION=5.7.2-dind
+ARG K3D_VERSION=5.7.2
 ARG KFILT_VERSION=0.0.8
-ARG KUSTOMIZE_VERSION=v5.0.1
+ARG KUSTOMIZE_VERSION=5.0.1
 
-FROM ghcr.io/k3d-io/k3d:${K3D_VERSION}
+FROM ghcr.io/k3d-io/k3d:${K3D_VERSION}-dind
 
 ARG ARCHITECTURE
 ARG ARGOCD_VERSION
@@ -27,11 +27,11 @@ RUN test -n "$ARCHITECTURE" || case $(uname -m) in \
     && apk add \
         bash \
         git-daemon \
-    && curl -fsSL https://github.com/argoproj/argo-cd/releases/download/${ARGOCD_VERSION}/argocd-linux-${ARCHITECTURE} -o /usr/local/bin/argocd \
+    && curl -fsSL https://github.com/argoproj/argo-cd/releases/download/v${ARGOCD_VERSION}/argocd-linux-${ARCHITECTURE} -o /usr/local/bin/argocd \
     && curl -fsSL https://get.helm.sh/helm-v${HELM_VERSION}-linux-${ARCHITECTURE}.tar.gz \
     | tar xzOf - linux-${ARCHITECTURE}/helm > /usr/local/bin/helm \
     && curl -fsSL https://github.com/ryane/kfilt/releases/download/v${KFILT_VERSION}/kfilt_${KFILT_VERSION}_linux_${ARCHITECTURE} -o /usr/local/bin/kfilt \
-    && curl -fsSL https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2F${KUSTOMIZE_VERSION}/kustomize_${KUSTOMIZE_VERSION}_linux_${ARCHITECTURE}.tar.gz \
+    && curl -fsSL https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_${ARCHITECTURE}.tar.gz \
     | tar xzOf - kustomize > /usr/local/bin/kustomize \
     && chmod +x \
         /usr/local/bin/argocd \

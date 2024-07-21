@@ -9,18 +9,39 @@
   ],
   customManagers: [
     {
+      depNameTemplate: "Argo CD",
+      fileMatch: ["^Dockerfile$"],
+      matchStrings: ["ARG ARGOCD_VERSION=(?<currentValue>.*?)\\n"],
+      datasourceTemplate: "github-releases",
+      packageNameTemplate: "argoproj/argo-cd"
+    },
+    {
+      depNameTemplate: "Helm",
+      fileMatch: ["^Dockerfile$"],
+      matchStrings: ["ARG HELM_VERSION=(?<currentValue>.*?)\\n"],
+      datasourceTemplate: "github-releases",
+      packageNameTemplate: "helm/helm"
+    },
+    {
       depNameTemplate: "K3D",
       fileMatch: ["^Dockerfile$"],
-      matchStrings: ["ARG K3D_VERSION=(?<currentValue>.*?)-dind\\n"],
+      matchStrings: ["ARG K3D_VERSION=(?<currentValue>.*?)\\n"],
       datasourceTemplate: "github-tags",
       packageNameTemplate: "k3d-io/k3d",
     },
     {
-      depNameTemplate: "Tools",
+      depNameTemplate: "Kfilt",
       fileMatch: ["^Dockerfile$"],
-      matchStrings: ["ARG TOOLS_VERSION=(?<currentValue>.*?)\\n"],
-      datasourceTemplate: "github-tags",
-      packageNameTemplate: "nedix/kubernetes-tools-docker",
+      matchStrings: ["ARG KFILT_VERSION=(?<currentValue>.*?)\\n"],
+      datasourceTemplate: "github-releases",
+      packageNameTemplate: "ryane/kfilt"
+    },
+    {
+      depNameTemplate: "Kustomize",
+      fileMatch: ["^Dockerfile$"],
+      matchStrings: ["ARG KUSTOMIZE_VERSION=(?<currentValue>.*?)\\n"],
+      datasourceTemplate: "github-releases",
+      packageNameTemplate: "kubernetes-sigs/kustomize"
     },
   ],
   packageRules: [
@@ -28,6 +49,21 @@
       description: "Disable grouping for all dependencies",
       matchPackagePatterns: [".*"],
       groupName: null,
+    },
+    {
+      description: "Custom versioning for Argo CD",
+      matchPackageNames: ["argoproj/argo-cd"],
+      extractVersion: "^v(?<version>.*)$",
+    },
+    {
+      description: "Custom versioning for K3D",
+      matchPackageNames: ["k3d-io/k3d"],
+      extractVersion: "^v(?<version>.*)$",
+    },
+    {
+      description: "Custom versioning for Kustomize",
+      matchPackageNames: ["kubernetes-sigs/kustomize"],
+      extractVersion: "^v(?<version>.*)$",
     },
   ],
 }
