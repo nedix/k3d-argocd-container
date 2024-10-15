@@ -17,7 +17,7 @@ docker run --rm --pull always -d --name k8sage \
     -p 443:443 \
     -p 6445:6445 \
     --privileged \
-    ghcr.io/nedix/k3d-argocd-docker
+    ghcr.io/nedix/k3d-argocd-container
 ```
 
 ### Steps
