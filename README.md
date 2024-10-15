@@ -8,7 +8,7 @@ Kubernetes with Argo CD as a container. Can be used to test infrastructure code 
 
 ```shell
 git clone https://github.com/argoproj/argocd-example-apps.git applications/example/
-wget -qO- https://github.com/nedix/k3d-argocd-docker/archive/refs/heads/main.zip | tar xzOf - k3d-argocd-container-main/applications.yaml.example > applications.yaml
+wget -qO- https://github.com/nedix/k3d-argocd-container/archive/refs/heads/main.zip | tar xzOf - k3d-argocd-container-main/applications.yaml.example > applications.yaml
 docker volume create k8sage
 docker run --rm --pull always -d --name k8sage \
     -v k8sage:/mnt/docker \
