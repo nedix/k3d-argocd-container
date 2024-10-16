@@ -2,7 +2,7 @@ CONTAINER := k8sage
 DIND_VOLUME := k8sage
 
 setup:
-	@docker build $(CURDIR) -t $(CONTAINER)
+	@docker build --progress=plain -f Containerfile -t $(CONTAINER) $(CURDIR)
 	@docker volume create $(DIND_VOLUME)
 	@test -s applications.yaml || cp applications.yaml.example applications.yaml
 

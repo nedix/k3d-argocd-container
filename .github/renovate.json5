@@ -5,35 +5,35 @@
   customManagers: [
     {
       depNameTemplate: "Argo CD",
-      fileMatch: ["^Dockerfile$"],
+      fileMatch: ["^Containerfile$"],
       matchStrings: ["ARG ARGOCD_VERSION=(?<currentValue>.*?)\\n"],
       datasourceTemplate: "github-releases",
       packageNameTemplate: "argoproj/argo-cd"
     },
     {
       depNameTemplate: "Helm",
-      fileMatch: ["^Dockerfile$"],
+      fileMatch: ["^Containerfile$"],
       matchStrings: ["ARG HELM_VERSION=(?<currentValue>.*?)\\n"],
       datasourceTemplate: "github-releases",
       packageNameTemplate: "helm/helm"
     },
     {
       depNameTemplate: "K3D",
-      fileMatch: ["^Dockerfile$"],
+      fileMatch: ["^Containerfile$"],
       matchStrings: ["ARG K3D_VERSION=(?<currentValue>.*?)\\n"],
       datasourceTemplate: "github-tags",
       packageNameTemplate: "k3d-io/k3d",
     },
     {
       depNameTemplate: "Kfilt",
-      fileMatch: ["^Dockerfile$"],
+      fileMatch: ["^Containerfile$"],
       matchStrings: ["ARG KFILT_VERSION=(?<currentValue>.*?)\\n"],
       datasourceTemplate: "github-releases",
       packageNameTemplate: "ryane/kfilt"
     },
     {
       depNameTemplate: "Kustomize",
-      fileMatch: ["^Dockerfile$"],
+      fileMatch: ["^Containerfile$"],
       matchStrings: ["ARG KUSTOMIZE_VERSION=(?<currentValue>.*?)\\n"],
       datasourceTemplate: "github-releases",
       packageNameTemplate: "kubernetes-sigs/kustomize"
