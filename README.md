@@ -3,91 +3,45 @@
 Kubernetes with Argo CD inside a container.
 Can be used to test infrastructure code locally.
 
-## Setup
+## Usage
 
-### Summary
+#### 1. Create a named volume for Docker in Docker
+
+```
+docker volume create k8sage
+```
+
+#### 2. Clone some example applications
 
 ```shell
 git clone https://github.com/argoproj/argocd-example-apps.git applications/example/
-wget -qO- https://github.com/nedix/k3d-argocd-container/archive/refs/heads/main.zip | tar xzOf - k3d-argocd-container-main/applications.yaml.example > applications.yaml
-docker volume create k8sage
+```
+
+#### 3. Create an `applications.yml` configuration file
+
+```shell
+wget -q https://github.com/nedix/k3d-argocd-container/applications.yml.example
+```
+
+#### 4. Start the service
+
+```shell
 docker run --rm --pull always -d --name k8sage \
     -v k8sage:/mnt/docker \
     -v ${PWD}/applications:/mnt/applications \
-    --mount "type=bind,source=${PWD}/applications.yaml,target=/mnt/config/applications.yaml" \
+    --mount "type=bind,source=${PWD}/applications.yml,target=/mnt/config/applications.yml" \
     -p 443:443 \
     -p 6445:6445 \
-    --privileged \
+    --privileged \ # required for docker-in-docker \
     nedix/k3d-argocd
 ```
 
-### Steps
+#### 5a. Access the Argo CD GUI
 
-**Mount a named volume for Docker in Docker cache**
+- Navigate to [https://127.0.0.1:443](https://127.0.0.1:443)
+- Sign in with `admin:admin` as the credentials
 
-```
-docker volume create k8sage
-```
-
-Flags:
-
-```
--v k8sage:/mnt/docker
-```
-
-**Mount your application repository on `/mnt/applications`**
-
-```shell
-git clone https://github.com/argoproj/argocd-example-apps.git applications/example/
-```
-
-Flags:
-
-```
--v ${PWD}/applications:/mnt/applications
-```
-
-**Mount `applications.yaml` configuration file on `/mnt/config/applications.yaml`**
-
-```shell
-wget -qO- https://github.com/nedix/k3d-argocd-container/archive/refs/heads/main.zip | tar xzOf - k3d-argocd-docker-main/applications.yaml.example > applications.yaml
-```
-
-Flags:
-
-```
---mount "type=bind,source=${PWD}/applications.yaml,target=/mnt/config/applications.yaml"
-```
-
-**Forward network ports**
-
-Flags:
-
-```
--p 443:443
-```
-
-```
--p 6445:6445
-```
-
-**Give privileges for Docker in Docker**
-
-Flags:
-
-```
---privileged
-```
-
-## Usage
-
-### Argo CD GUI
-
-[https://localhost:443](https://localhost:443)
-
-Login: `admin:admin`
-
-### Kubernetes API
+#### 5b. Access the Kubernetes API
 
 Copy Kubernetes config to your host
 
@@ -100,6 +54,8 @@ Replace key `clusters.0.cluster.certificate-authority-data`
 ```yaml
 insecure-skip-tls-verify: true
 ```
+
+<hr>
 
 ## Attribution
 

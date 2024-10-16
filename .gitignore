@@ -1,4 +1,4 @@
-applications.yaml
+applications.yml
 applications/*
 !applications/example
 kubeconfig.yaml

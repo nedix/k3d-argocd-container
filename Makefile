@@ -4,7 +4,7 @@ DIND_VOLUME := k8sage
 setup:
 	@docker build --progress=plain -f Containerfile -t $(CONTAINER) $(CURDIR)
 	@docker volume create $(DIND_VOLUME)
-	@test -s applications.yaml || cp applications.yaml.example applications.yaml
+	@test -s applications.yml || cp applications.yml.example applications.yml
 
 destroy:
 	@$(MAKE) down
@@ -15,7 +15,7 @@ up: KUBERNETES_PORT = 6445
 up:
 	@docker run --rm -d --name $(CONTAINER) \
 		--privileged \
-		--mount "type=bind,source=$(CURDIR)/applications.yaml,target=/mnt/config/applications.yaml" \
+		--mount "type=bind,source=$(CURDIR)/applications.yml,target=/mnt/config/applications.yml" \
 		-v $(CURDIR)/applications:/mnt/applications \
 		-v $(DIND_VOLUME):/mnt/docker \
 		-p $(ARGOCD_PORT):443 \

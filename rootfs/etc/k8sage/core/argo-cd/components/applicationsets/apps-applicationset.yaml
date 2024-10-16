@@ -15,7 +15,7 @@ spec:
               repoURL: git://host.k3d.internal/config/
               revision: HEAD
               files:
-                - path: applications.yaml
+                - path: applications.yml
               pathParamPrefix: void
           - list:
               elements: []

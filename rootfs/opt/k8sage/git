@@ -45,10 +45,10 @@ _setup_repositories() {
     ln -s /mnt/applications/ /var/git/repositories/
 
     yellow; echo "Setting up 'config' repository..."; normal
-    cp /mnt/config/applications.yaml /var/git/repositories/config/
+    cp /mnt/config/applications.yml /var/git/repositories/config/
     cd /var/git/repositories/config/
     git init -b main
-    git add applications.yaml
+    git add applications.yml
     git -c user.name="$GIT_USER" -c user.email="$GIT_EMAIL" commit -m "Initial commit"
 
     yellow; echo "Setting up 'core' repository..."; normal
