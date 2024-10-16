@@ -1,6 +1,7 @@
 # [k3d-argocd-container](https://github.com/nedix/k3d-argocd-container) a.k.a. k8sage
 
-Kubernetes with Argo CD as a container. Can be used to test infrastructure code locally.
+Kubernetes with Argo CD inside a container.
+Can be used to test infrastructure code locally.
 
 ## Setup
 
