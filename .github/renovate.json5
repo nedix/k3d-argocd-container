@@ -41,11 +41,6 @@
   ],
   packageRules: [
     {
-      description: "Disable grouping for all dependencies",
-      matchPackagePatterns: [".*"],
-      groupName: null,
-    },
-    {
       description: "Custom versioning for Argo CD",
       matchPackageNames: ["argoproj/argo-cd"],
       extractVersion: "^v(?<version>.*)$",
