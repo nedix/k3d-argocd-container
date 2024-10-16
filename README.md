@@ -20,7 +20,7 @@ git clone https://github.com/argoproj/argocd-example-apps.git applications/examp
 #### 3. Create an `applications.yml` configuration file
 
 ```shell
-wget -q https://github.com/nedix/k3d-argocd-container/applications.yml.example
+wget -q https://github.com/nedix/k3d-argocd-container/applications.yml.example -O applications.yml
 ```
 
 #### 4. Start the service
