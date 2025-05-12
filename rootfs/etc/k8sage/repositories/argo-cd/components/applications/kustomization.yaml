@@ -1,0 +1,8 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - argo-cd-application.yaml
+  - argo-events-application.yaml
+  - argo-rollouts-application.yaml
+  - argo-workflows-application.yaml

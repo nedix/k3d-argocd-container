@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+
+metadata:
+  name: argo-events
+  namespace: argo-cd
+
+spec:
+  project: argo-cd
+  source:
+    repoURL: git://k8sage/argo-events/
+    targetRevision: HEAD
+    path: .
+  destination:
+    name: in-cluster
+    namespace: argo-events
+  syncPolicy:
+    syncOptions:
+      - ApplyOutOfSyncOnly=true
+      - CreateNamespace=true
+      - PruneLast=true
+      - ServerSideApply=true
+      - Validate=false
+    automated:
+      allowEmpty: true
+      prune: true
+      selfHeal: true

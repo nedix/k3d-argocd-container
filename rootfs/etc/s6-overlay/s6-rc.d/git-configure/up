@@ -1,0 +1,39 @@
+#!/usr/bin/env sh
+
+: ${GIT_EMAIL:="git@k8sage"}
+: ${GIT_USER:="k8sage"}
+
+{
+    cd /etc/k8sage/repositories/config/
+    git init -b main
+    git add -f applications.yml
+    git -c user.name="$GIT_USER" -c user.email="$GIT_EMAIL" commit -m "Initial commit"
+}
+
+{
+    cd /etc/k8sage/repositories/argo-cd/
+    git init -b main
+    git add .
+    git -c user.name="$GIT_USER" -c user.email="$GIT_EMAIL" commit -m "Initial commit"
+}
+
+{
+    cd /etc/k8sage/repositories/argo-events/
+    git init -b main
+    git add .
+    git -c user.name="$GIT_USER" -c user.email="$GIT_EMAIL" commit -m "Initial commit"
+}
+
+{
+    cd /etc/k8sage/repositories/argo-rollouts/
+    git init -b main
+    git add .
+    git -c user.name="$GIT_USER" -c user.email="$GIT_EMAIL" commit -m "Initial commit"
+}
+
+{
+    cd /etc/k8sage/repositories/argo-workflows/
+    git init -b main
+    git add .
+    git -c user.name="$GIT_USER" -c user.email="$GIT_EMAIL" commit -m "Initial commit"
+}

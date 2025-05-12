@@ -1,0 +1,31 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: argo-cd
+
+helmCharts:
+  - name: argo-cd
+    namespace: argo-cd
+    releaseName: argo-cd
+    repo: https://argoproj.github.io/argo-helm
+    valuesFile: config/values.yaml
+    version: 8.0.1
+
+resources:
+  - resources/namespace.yaml
+  - secrets/repo-creds.yaml
+  - secrets/redis-secret.yaml
+  - components/projects
+  - components/applications
+  - components/applicationsets
+  #  - https://github.com/nedix/argocd-skip-crds-plugin//manifests/resources/?ref=v0.15.0
+
+#patches:
+#  - target:
+#      kind: ConfigMap
+#      name: argocd-cm
+#    path: patches/argocd-cm.patch.yaml
+##  - path: https://raw.githubusercontent.com/nedix/argocd-skip-crds-plugin/v0.15.0/manifests/patches/repo-server.patch.yaml
+##    target:
+##      kind: Deployment
+##      name: argocd-repo-server

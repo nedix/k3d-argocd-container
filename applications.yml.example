@@ -2,6 +2,6 @@ applications:
   - name: example
     namespace: example
     source:
-      repoUrl: git://host.k3d.internal/applications/example/
+      repoUrl: git://k8sage/applications/example/
       targetRevision: HEAD
       path: kustomize-guestbook

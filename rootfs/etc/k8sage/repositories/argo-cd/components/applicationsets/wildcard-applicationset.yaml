@@ -1,0 +1,49 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+
+metadata:
+  name: wildcard-applicationset
+  namespace: argo-cd
+
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - matrix:
+        generators:
+          - git:
+              repoURL: git://k8sage/config/
+              revision: HEAD
+              files:
+                - path: applications.yml
+              pathParamPrefix: void
+          - list:
+              elements: []
+              elementsYaml: "{{.applications | toJson}}"
+  template:
+    metadata:
+      name: "{{.name}}"
+    spec:
+      project: wildcard
+      source:
+        repoURL: "{{.source.repoUrl}}"
+        path: "{{.source.path}}"
+        targetRevision: '{{default "HEAD" .source.targetRevision}}'
+      #        plugin:
+#          name: skip-crds-plugin
+      destination:
+        name: in-cluster
+        namespace: "{{.namespace}}"
+      syncPolicy:
+        syncOptions:
+          - ApplyOutOfSyncOnly=true
+          - CreateNamespace=true
+          - PruneLast=true
+          - ServerSideApply=true
+          - Validate=false
+        automated:
+          allowEmpty: true
+          prune: true
+          selfHeal: true
+        retry:
+          limit: 0

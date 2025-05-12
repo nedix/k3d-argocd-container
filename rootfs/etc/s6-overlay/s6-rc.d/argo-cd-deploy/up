@@ -1,0 +1,13 @@
+#!/usr/bin/env sh
+
+set -ex
+
+TEMP_FILE="$(mktemp)"
+
+kustomize build --enable-helm "/etc/k8sage/repositories/argo-cd/" -o "$TEMP_FILE"
+
+kfilt -i kind=CustomResourceDefinition -f "$TEMP_FILE" | kubectl apply -f -
+kfilt -i kind=CustomResourceDefinition -f "$TEMP_FILE" | kubectl wait --for condition=established -f -
+kfilt -x kind=CustomResourceDefinition -f "$TEMP_FILE" | kubectl apply -f -
+
+rm "$TEMP_FILE"

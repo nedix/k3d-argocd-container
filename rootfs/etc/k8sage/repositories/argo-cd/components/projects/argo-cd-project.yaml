@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+
+metadata:
+  name: argo-cd
+  namespace: argo-cd
+
+spec:
+  description: ArgoCD project
+  sourceRepos:
+    - git://k8sage/argo-cd/
+    - git://k8sage/argo-events/
+    - git://k8sage/argo-rollouts/
+    - git://k8sage/argo-workflows/
+  destinations:
+    - namespace: "argo-cd"
+      server: "*"
+    - namespace: "argo-events"
+      server: "*"
+    - namespace: "argo-rollouts"
+      server: "*"
+    - namespace: "argo-workflows"
+      server: "*"
+  clusterResourceWhitelist:
+    - group: "*"
+      kind: "*"
+  orphanedResources:
+    warn: true

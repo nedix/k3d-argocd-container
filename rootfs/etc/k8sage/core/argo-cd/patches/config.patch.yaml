@@ -1,8 +1,0 @@
-- op: add
-  path: /data
-  value:
-    applicationsetcontroller.enable.new.git.file.globbing: "true"
-    controller.status.processors: "100"
-    exec.enabled: "true"
-    kustomize.buildOptions: --enable-helm
-    users.anonymous.enabled: "true"

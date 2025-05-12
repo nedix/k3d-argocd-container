@@ -1,0 +1,20 @@
+nameOverride: ""
+
+configs:
+  cm:
+    kustomize.buildOptions: "--enable-helm --enable-alpha-plugins"
+#  cmp:
+#    create: true
+#    plugins:
+#      kustomize-build:
+#        generate:
+#          command: ["sh", "-c"]
+#          args: ["kustomize build --enable-alpha-plugins --enable-helm --load-restrictor LoadRestrictionsNone"]
+  params:
+    server.disable.auth: true
+    server.insecure: true
+  secret:
+    argocdServerAdminPassword: "$2a$12$gV6WUTviCkCt1PmxWKjeme893hZ5EFAOvenpMCwwo4kSuBvcHqrAS"
+
+redisSecretInit:
+  enabled: false

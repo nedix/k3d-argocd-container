@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+
+metadata:
+  name: wildcard
+  namespace: argo-cd
+
+spec:
+  description: Wildcard project
+  sourceRepos:
+    - git://k8sage/*/
+    - https://github.com/argoproj/argocd-example-apps.git
+  destinations:
+    - namespace: "!argo-cd"
+      server: "*"
+    - namespace: "!argo-events"
+      server: "*"
+    - namespace: "!argo-rollouts"
+      server: "*"
+    - namespace: "!argo-workflows"
+      server: "*"
+    - namespace: "!default"
+      server: "*"
+    - namespace: "!kube-*"
+      server: "*"
+    - namespace: "*"
+      server: "*"
+  clusterResourceWhitelist:
+    - group: "*"
+      kind: "*"
+  orphanedResources:
+    warn: true

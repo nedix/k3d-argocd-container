@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+
+exec /usr/bin/git daemon \
+    --informative-errors \
+    --export-all \
+    --base-path="/etc/k8sage/repositories"

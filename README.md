@@ -1,4 +1,4 @@
-# [k3d-argocd-container](https://github.com/nedix/k3d-argocd-container) a.k.a. k8sage
+# [k3s-argocd-container](https://github.com/nedix/k3d-argocd-container) a.k.a. k8sage
 
 Kubernetes with Argo CD inside a container.
 Can be used to test infrastructure code locally.
@@ -27,11 +27,11 @@ wget -q https://github.com/nedix/k3d-argocd-container/applications.yml.example -
 
 ```shell
 docker run --rm --pull always -d --name k8sage \
-    -v k8sage:/mnt/docker \
-    -v ${PWD}/applications:/mnt/applications \
-    --mount "type=bind,source=${PWD}/applications.yml,target=/mnt/config/applications.yml" \
-    -p 443:443 \
-    -p 6445:6445 \
+    -v k8sage:/var/k8sage/docker \
+    -v ${PWD}/applications:/etc/k8sage/repositories/argocd-example-apps/ \
+    --mount "type=bind,source=${PWD}/applications.yml,target=/var/k8sage/applications.yml" \
+    -p 127.0.0.1:8080:80 \
+    -p 127.0.0.1:6443:6443 \
     --privileged \ # required for docker-in-docker \
     nedix/k3d-argocd
 ```
@@ -46,7 +46,7 @@ docker run --rm --pull always -d --name k8sage \
 Copy Kubernetes config to your host
 
 ```shell
-docker cp k8sage:/etc/k8sage/cluster-config/kube/config.yaml ${PWD}/kubeconfig.yaml
+docker cp k8sage:/data/kubeconfig.yml ${PWD}/kubeconfig.yml
 ```
 
 Replace key `clusters.0.cluster.certificate-authority-data`

@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+
+argocd() {
+    command argocd --core "${@:1}"
+}
