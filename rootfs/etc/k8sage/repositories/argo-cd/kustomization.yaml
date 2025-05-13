@@ -13,8 +13,8 @@ helmCharts:
 
 resources:
   - resources/namespace.yaml
-  - secrets/repo-creds.yaml
-  - secrets/redis-secret.yaml
+  - secrets/redis.secret.yaml
+  - secrets/repo-creds.secret.yaml
   - components/projects
   - components/applications
   - components/applicationsets

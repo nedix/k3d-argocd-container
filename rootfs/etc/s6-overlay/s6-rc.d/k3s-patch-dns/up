@@ -3,7 +3,7 @@
 : ${K8SAGE_IP:="$(getent hosts k8sage | awk '{ print $1 }')"}
 : ${K8SAGE_K3S_IP:="$(getent hosts k8sage-k3s | awk '{ print $1 }')"}
 
-while ! kubectl get configmap -n kube-system coredns 1> /dev/null 2> /dev/null; do
+while ! kubectl get configmap --namespace kube-system coredns 1> /dev/null 2> /dev/null; do
     sleep 1
 done
 
@@ -13,4 +13,4 @@ kubectl patch configmap \
     --type="json" \
     --patch='[{"op": "replace", "path": "/data/NodeHosts", "value": "'"${K8SAGE_IP} k8sage\n${K8SAGE_K3S_IP} k8sage-k3s"'"}]'
 
-kubectl rollout restart deployment -n kube-system coredns
+kubectl rollout restart deployment --namespace kube-system coredns
