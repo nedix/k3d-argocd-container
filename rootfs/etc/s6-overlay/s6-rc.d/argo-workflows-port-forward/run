@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+
+exec kubectl \
+    port-forward \
+    --address="localhost,0.0.0.0" \
+    --namespace="argo-workflows" \
+    service/argo-workflows-server \
+    2746:2746

@@ -8,13 +8,14 @@ destroy:
 	@docker network rm k8sage
 
 up: ARGO_CD_PORT = 8080
+up: ARGO_WORKFLOWS_PORT = 2746
 up: KUBERNETES_PORT = 6443
 up:
 	@docker run --rm -d --name k8sage \
-    	--privileged \
-		--mount="type=bind,source=$(CURDIR)/applications.yml,target=/etc/k8sage/repositories/config/applications.yml" \
 		-v /var/run/docker.sock:/var/run/docker.sock \
+		--mount="type=bind,source=$(CURDIR)/applications.yml,target=/etc/k8sage/repositories/config/applications.yml" \
 		-p 127.0.0.1:$(ARGO_CD_PORT):8080 \
+		-p 127.0.0.1:$(ARGO_WORKFLOWS_PORT):2746 \
 		-p 127.0.0.1:$(KUBERNETES_PORT):6443 \
 		k8sage
 	@docker network connect k8sage k8sage

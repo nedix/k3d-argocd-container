@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+
+while ! kubectl rollout status --namespace argo-workflows deployment argo-workflows-server 1> /dev/null 2> /dev/null; do
+    sleep 1
+done

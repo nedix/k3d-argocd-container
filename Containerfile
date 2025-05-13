@@ -70,4 +70,9 @@ HEALTHCHECK CMD kubectl get --raw="/readyz?verbose"
 
 # Argo CD
 EXPOSE 8080
+
+# Argo Workflows
+EXPOSE 2746
+
+# Kubernetes API
 EXPOSE 6443
