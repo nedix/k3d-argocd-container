@@ -30,9 +30,9 @@ docker run --rm --pull always -d --name k8sage \
     -v k8sage:/var/k8sage/docker \
     -v ${PWD}/applications:/etc/k8sage/repositories/argocd-example-apps/ \
     --mount "type=bind,source=${PWD}/applications.yml,target=/var/k8sage/applications.yml" \
-    -p 127.0.0.1:8080:80 \
     -p 127.0.0.1:6443:6443 \
     --privileged \ # required for docker-in-docker \
+    -p 127.0.0.1:8080:8080 \
     nedix/k3d-argocd
 ```
 

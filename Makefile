@@ -14,7 +14,7 @@ up:
     	--privileged \
 		--mount="type=bind,source=$(CURDIR)/applications.yml,target=/etc/k8sage/repositories/config/applications.yml" \
 		-v /var/run/docker.sock:/var/run/docker.sock \
-		-p 127.0.0.1:$(ARGO_CD_PORT):80 \
+		-p 127.0.0.1:$(ARGO_CD_PORT):8080 \
 		-p 127.0.0.1:$(KUBERNETES_PORT):6443 \
 		k8sage
 	@docker network connect k8sage k8sage

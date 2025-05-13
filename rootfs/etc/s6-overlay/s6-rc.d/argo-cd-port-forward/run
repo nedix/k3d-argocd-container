@@ -5,4 +5,4 @@ exec kubectl \
     --address="localhost,0.0.0.0" \
     --namespace="argo-cd" \
     service/argo-cd-server \
-    80:http
+    8080:http

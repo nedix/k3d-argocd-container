@@ -68,5 +68,6 @@ ENTRYPOINT ["/entrypoint.sh"]
 
 HEALTHCHECK CMD kubectl get --raw="/readyz?verbose"
 
-EXPOSE 80
+# Argo CD
+EXPOSE 8080
 EXPOSE 6443
