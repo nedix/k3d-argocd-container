@@ -61,6 +61,7 @@ RUN apk add --virtual .build-deps \
 
 COPY /rootfs/ /
 
+ENV ENV="/etc/profile.d"
 ENV K3S_VERSION="$K3S_VERSION"
 
 ENTRYPOINT ["/entrypoint.sh"]

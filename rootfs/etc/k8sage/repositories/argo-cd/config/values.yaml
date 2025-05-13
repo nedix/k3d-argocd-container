@@ -3,13 +3,6 @@ nameOverride: ""
 configs:
   cm:
     kustomize.buildOptions: "--enable-helm --enable-alpha-plugins"
-#  cmp:
-#    create: true
-#    plugins:
-#      kustomize-build:
-#        generate:
-#          command: ["sh", "-c"]
-#          args: ["kustomize build --enable-alpha-plugins --enable-helm --load-restrictor LoadRestrictionsNone"]
   params:
     server.disable.auth: true
     server.insecure: true
