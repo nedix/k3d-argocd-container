@@ -64,15 +64,10 @@ COPY /rootfs/ /
 ENV ENV="/etc/profile"
 ENV K3S_VERSION="$K3S_VERSION"
 
+ENV HTTP_PORT="80"
+ENV HTTPS_PORT="443"
+ENV API_PORT="6443"
+
 ENTRYPOINT ["/entrypoint.sh"]
 
 HEALTHCHECK CMD kubectl get --raw="/readyz?verbose"
-
-# Argo CD
-EXPOSE 8080
-
-# Argo Workflows
-EXPOSE 2746
-
-# Kubernetes API
-EXPOSE 6443

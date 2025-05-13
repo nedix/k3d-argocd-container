@@ -3,4 +3,5 @@ kind: Kustomization
 
 resources:
   - argo-cd-project.yaml
+  - nginx-project.yaml
   - wildcard-project.yaml

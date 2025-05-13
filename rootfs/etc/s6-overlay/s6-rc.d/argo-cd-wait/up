@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
 
-while ! kubectl rollout status --namespace argo-cd deployment argo-cd-server 1> /dev/null 2> /dev/null; do
+while ! kubectl rollout status --namespace argo-cd deployment argo-cd-repo-server 1> /dev/null 2> /dev/null; do
     sleep 1
 done

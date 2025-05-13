@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+
+metadata:
+  name: nginx
+  namespace: argo-cd
+
+spec:
+  project: nginx
+  source:
+    repoURL: git://k8sage/nginx/
+    targetRevision: HEAD
+    path: .
+  destination:
+    name: in-cluster
+    namespace: nginx
+  syncPolicy:
+    syncOptions:
+      - ApplyOutOfSyncOnly=true
+      - CreateNamespace=true
+      - PruneLast=true
+      - ServerSideApply=true
+      - Validate=false
+    automated:
+      allowEmpty: true
+      prune: true
+      selfHeal: true

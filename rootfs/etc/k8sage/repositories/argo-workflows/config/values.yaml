@@ -1,2 +1,11 @@
 nameOverride: ""
+
+controller:
+  extraArgs:
+    - --base-href="/argo-workflows"
+
+server:
+  extraArgs:
+    - --base-href="/argo-workflows"
+
 singleNamespace: true

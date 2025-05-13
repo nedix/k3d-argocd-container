@@ -12,7 +12,9 @@ helmCharts:
     version: 8.0.1
 
 resources:
+  - resources/ingress.yaml
   - resources/namespace.yaml
+  - secrets/argo-workflows-sso.secret.yaml
   - secrets/redis.secret.yaml
   - secrets/repo-creds.secret.yaml
   - components/projects

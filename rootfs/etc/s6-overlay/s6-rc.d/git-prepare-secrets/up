@@ -1,0 +1,22 @@
+#!/usr/bin/env sh
+
+argo-workflows-sso-secret() {
+cat <<EOF
+apiVersion: v1
+kind: Secret
+
+metadata:
+  name: argo-workflows-sso
+
+data:
+  # client-id is 'argo-workflows-sso'
+  client-id: YXJnby13b3JrZmxvd3Mtc3Nv
+  # client-secret is 'MY-SECRET-STRING'
+  client-secret: TVktU0VDUkVULVNUUklORw==
+EOF
+}
+
+for APPLICATION in argo-cd argo-workflows; do
+    mkdir -p "/etc/k8sage/repositories/${APPLICATION}/secrets/"
+    argo-workflows-sso-secret > "/etc/k8sage/repositories/${APPLICATION}/secrets/argo-workflows-sso.secret.yaml"
+done

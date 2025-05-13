@@ -1,8 +1,0 @@
-#!/usr/bin/env sh
-
-exec kubectl \
-    port-forward \
-    --address="localhost,0.0.0.0" \
-    --namespace="argo-cd" \
-    service/argo-cd-server \
-    8080:http
