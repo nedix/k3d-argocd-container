@@ -1,4 +1,4 @@
-# [k3s-argocd-container](https://github.com/nedix/k3d-argocd-container) a.k.a. k8sage
+# [k3s-argocd-container](https://github.com/nedix/k3s-argocd-container) a.k.a. k8sage
 
 Kubernetes with Argo CD inside a container.
 Can be used to test infrastructure code locally.
@@ -20,53 +20,28 @@ git clone https://github.com/argoproj/argocd-example-apps.git applications/examp
 #### 3. Create an `applications.yml` configuration file
 
 ```shell
-wget -q https://github.com/nedix/k3d-argocd-container/applications.yml.example -O applications.yml
+wget -q https://github.com/nedix/k3s-argocd-container/applications.yml.example -O applications.yml
 ```
 
 #### 4. Start the service
 
 ```shell
 docker run --rm --pull always -d --name k8sage \
-    --privileged \
+		-v /var/run/docker.sock:/var/run/docker.sock \
     -v ${PWD}/applications:/etc/k8sage/repositories/argocd-example-apps/ \
-    --mount "type=bind,source=${PWD}/applications.yml,target=/var/k8sage/applications.yml" \
-    -p 127.0.0.1:2746:2746 \
-    -p 127.0.0.1:6443:6443 \
-    -p 127.0.0.1:8080:8080 \
-    nedix/k3d-argocd
+		--mount="type=bind,source=${PWD}/applications.yml,target=/etc/k8sage/repositories/config/applications.yml" \
+    nedix/k3s-argocd
 ```
 
 #### 5a. Access the Argo CD GUI
 
-- Navigate to [https://127.0.0.1:443](https://127.0.0.1:443)
-- Sign in with `admin:admin` as the credentials
+- Navigate to [http://127.0.0.1](http://127.0.0.1)
+- Optionally sign in with `admin:admin` as the credentials
 
 #### 5b. Access the Kubernetes API
 
 Copy Kubernetes config to your host
 
 ```shell
-docker cp k8sage:/data/kubeconfig.yml ${PWD}/kubeconfig.yml
+docker cp k8sage:/root/.kube/config ${PWD}/kubeconfig.yaml
 ```
-
-Replace key `clusters.0.cluster.certificate-authority-data`
-
-```yaml
-insecure-skip-tls-verify: true
-```
-
-<hr>
-
-## Attribution
-
-- [Argo CD] [(License)](https://raw.githubusercontent.com/argoproj/argo-cd/master/LICENSE)
-- [Helm] [(License)](https://raw.githubusercontent.com/helm/helm/main/LICENSE)
-- [K3D] [(License)](https://raw.githubusercontent.com/k3d-io/k3d/main/LICENSE)
-- [Kfilt] [(License)](https://raw.githubusercontent.com/ryane/kfilt/main/LICENSE)
-- [Kustomize] [(License)](https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/LICENSE)
-
-[Argo CD]: https://github.com/argoproj/argo-cd
-[Helm]: https://github.com/helm/helm
-[K3D]: https://github.com/k3d-io/k3d
-[Kfilt]: https://github.com/ryane/kfilt
-[Kustomize]: https://github.com/kubernetes-sigs/kustomize
