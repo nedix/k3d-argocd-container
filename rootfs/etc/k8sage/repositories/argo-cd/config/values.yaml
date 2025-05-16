@@ -10,23 +10,5 @@ configs:
   secret:
     argocdServerAdminPassword: "$2a$12$gV6WUTviCkCt1PmxWKjeme893hZ5EFAOvenpMCwwo4kSuBvcHqrAS"
 
-dex:
-  env:
-    - name: ARGO_WORKFLOWS_SSO_CLIENT_SECRET
-      valueFrom:
-        secretKeyRef:
-          key: client-secret
-          name: argo-workflows-sso
-
 redisSecretInit:
   enabled: false
-
-server:
-  config:
-    dex.config: |
-      staticClients:
-        - id: argo-workflows-sso
-          name: Argo Workflow
-          redirectURIs:
-            - http://127.0.0.1:2746/oauth2/callback
-          secretEnv: ARGO_WORKFLOWS_SSO_CLIENT_SECRET

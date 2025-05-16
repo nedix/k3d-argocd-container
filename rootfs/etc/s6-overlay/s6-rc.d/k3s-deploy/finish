@@ -1,3 +1,0 @@
-#!/usr/bin/env sh
-
-docker stop k8sage-k3s

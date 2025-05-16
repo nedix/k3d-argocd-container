@@ -2,16 +2,19 @@ apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 
 metadata:
-  name: argo-cd
+  name: core
   namespace: argo-cd
 
 spec:
-  description: ArgoCD project
+  description: Core project
   sourceRepos:
     - git://k8sage/argo-cd/
     - git://k8sage/argo-events/
     - git://k8sage/argo-rollouts/
     - git://k8sage/argo-workflows/
+    - git://k8sage/authentik/
+    - git://k8sage/external-secrets/
+    - git://k8sage/nginx/
   destinations:
     - namespace: "argo-cd"
       server: "*"
@@ -20,6 +23,12 @@ spec:
     - namespace: "argo-rollouts"
       server: "*"
     - namespace: "argo-workflows"
+      server: "*"
+    - namespace: "authentik"
+      server: "*"
+    - namespace: "external-secrets"
+      server: "*"
+    - namespace: "nginx"
       server: "*"
   clusterResourceWhitelist:
     - group: "*"

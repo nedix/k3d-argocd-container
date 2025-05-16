@@ -1,5 +1,0 @@
-#!/usr/bin/env sh
-
-: ${K8SAGE_K3S_IP:="$(getent hosts k8sage-k3s | awk '{ print $1 }')"}
-
-exec socat TCP-LISTEN:6443,fork "TCP:${K8SAGE_K3S_IP}:6443"

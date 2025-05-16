@@ -23,8 +23,9 @@ RUN apk add --virtual .build-deps \
         xz \
     && apk add \
         docker-cli \
+        docker-engine \
+        fuse3 \
         git-daemon \
-        socat \
     && case "$(uname -m)" in \
         aarch64) \
             ARCHITECTURE="arm64" \
@@ -64,10 +65,18 @@ COPY /rootfs/ /
 ENV ENV="/etc/profile"
 ENV K3S_VERSION="$K3S_VERSION"
 
-ENV HTTP_PORT="80"
-ENV HTTPS_PORT="443"
-ENV API_PORT="6443"
-
 ENTRYPOINT ["/entrypoint.sh"]
 
 HEALTHCHECK CMD kubectl get --raw="/readyz?verbose"
+
+# HTTP port
+EXPOSE 80
+
+# HTTPS port
+EXPOSE 443
+
+# API port
+EXPOSE 6443
+
+VOLUME /var/lib/docker
+VOLUME /var/lib/kubelet

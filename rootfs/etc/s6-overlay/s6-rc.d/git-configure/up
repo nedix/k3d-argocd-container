@@ -32,9 +32,23 @@
 }
 
 {
+    cd /etc/k8sage/repositories/authentik/
+    git init -b main
+    git add .
+    git -c user.name="$GIT_USER" -c user.email="$GIT_EMAIL" commit -m "Initial commit"
+}
+
+{
     cd /etc/k8sage/repositories/config/
     git init -b main
-    git add -f applications.yml
+    git add -f applications.yaml
+    git -c user.name="$GIT_USER" -c user.email="$GIT_EMAIL" commit -m "Initial commit"
+}
+
+{
+    cd /etc/k8sage/repositories/external-secrets/
+    git init -b main
+    git add .
     git -c user.name="$GIT_USER" -c user.email="$GIT_EMAIL" commit -m "Initial commit"
 }
 

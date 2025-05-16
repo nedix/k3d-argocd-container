@@ -14,20 +14,9 @@ helmCharts:
 resources:
   - resources/ingress.yaml
   - resources/namespace.yaml
-  - secrets/argo-workflows-sso.secret.yaml
   - secrets/redis.secret.yaml
   - secrets/repo-creds.secret.yaml
   - components/projects
   - components/applications
   - components/applicationsets
   #  - https://github.com/nedix/argocd-skip-crds-plugin//manifests/resources/?ref=v0.15.0
-
-#patches:
-#  - target:
-#      kind: ConfigMap
-#      name: argocd-cm
-#    path: patches/argocd-cm.patch.yaml
-##  - path: https://raw.githubusercontent.com/nedix/argocd-skip-crds-plugin/v0.15.0/manifests/patches/repo-server.patch.yaml
-##    target:
-##      kind: Deployment
-##      name: argocd-repo-server

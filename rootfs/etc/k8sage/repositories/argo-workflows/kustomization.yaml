@@ -14,4 +14,3 @@ helmCharts:
 resources:
   - resources/ingress.yaml
   - resources/namespace.yaml
-  - secrets/argo-workflows-sso.secret.yaml

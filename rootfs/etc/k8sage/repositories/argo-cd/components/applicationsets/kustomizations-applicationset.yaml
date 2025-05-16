@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 
 metadata:
-  name: wildcard-applicationset
+  name: kustomizations-applicationset
   namespace: argo-cd
 
 spec:
@@ -15,7 +15,7 @@ spec:
               repoURL: git://k8sage/config/
               revision: HEAD
               files:
-                - path: applications.yml
+                - path: applications.yaml
               pathParamPrefix: void
           - list:
               elements: []
@@ -29,7 +29,7 @@ spec:
         repoURL: "{{.source.repoUrl}}"
         path: "{{.source.path}}"
         targetRevision: '{{default "HEAD" .source.targetRevision}}'
-      #        plugin:
+#        plugin:
 #          name: skip-crds-plugin
       destination:
         name: in-cluster

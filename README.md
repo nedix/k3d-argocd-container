@@ -5,19 +5,18 @@ Can be used to test infrastructure code locally.
 
 ## Usage
 
-#### 1. Create an `applications.yml` configuration file
+#### 1. Create an `applications.yaml` configuration file
 
 ```shell
-wget -q https://github.com/nedix/k3s-argocd-container/applications.yml.example -O applications.yml
+wget -q https://github.com/nedix/k3s-argocd-container/applications.yaml.example -O applications.yaml
 ```
 
 #### 2. Start the containers
 
 ```shell
 docker run --rm --pull always -d --name k8sage \
-		-v /var/run/docker.sock:/var/run/docker.sock \
     -v ${PWD}/applications:/etc/k8sage/repositories/argocd-example-apps/ \
-		--mount="type=bind,source=${PWD}/applications.yml,target=/etc/k8sage/repositories/config/applications.yml" \
+		--mount="type=bind,source=${PWD}/applications.yaml,target=/etc/k8sage/repositories/config/applications.yaml" \
     nedix/k3s-argocd
 ```
 

@@ -6,7 +6,7 @@ metadata:
   namespace: argo-cd
 
 spec:
-  project: nginx
+  project: core
   source:
     repoURL: git://k8sage/nginx/
     targetRevision: HEAD

@@ -6,7 +6,7 @@ metadata:
   namespace: argo-cd
 
 spec:
-  project: argo-cd
+  project: core
   source:
     repoURL: git://k8sage/argo-events/
     targetRevision: HEAD

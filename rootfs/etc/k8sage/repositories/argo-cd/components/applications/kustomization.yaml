@@ -6,4 +6,6 @@ resources:
   - argo-events-application.yaml
   - argo-rollouts-application.yaml
   - argo-workflows-application.yaml
+  - authentik-application.yaml
+  - external-secrets-application.yaml
   - nginx-application.yaml

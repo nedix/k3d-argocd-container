@@ -11,6 +11,10 @@ spec:
     - git://k8sage/*/
     - https://github.com/argoproj/argocd-example-apps.git
   destinations:
+    - namespace: "!default"
+      server: "*"
+    - namespace: "!kube-*"
+      server: "*"
     - namespace: "!argo-cd"
       server: "*"
     - namespace: "!argo-events"
@@ -19,9 +23,11 @@ spec:
       server: "*"
     - namespace: "!argo-workflows"
       server: "*"
-    - namespace: "!default"
+    - namespace: "!authentik"
       server: "*"
-    - namespace: "!kube-*"
+    - namespace: "!external-secrets"
+      server: "*"
+    - namespace: "!nginx"
       server: "*"
     - namespace: "*"
       server: "*"

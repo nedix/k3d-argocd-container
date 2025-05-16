@@ -2,6 +2,5 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  - argo-cd-project.yaml
-  - nginx-project.yaml
+  - core-project.yaml
   - wildcard-project.yaml

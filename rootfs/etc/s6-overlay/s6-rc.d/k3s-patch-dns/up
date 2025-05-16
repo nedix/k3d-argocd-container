@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
-: ${K8SAGE_IP:="$(getent hosts k8sage | awk '{ print $1 }')"}
-: ${K8SAGE_K3S_IP:="$(getent hosts k8sage-k3s | awk '{ print $1 }')"}
+: ${K8SAGE_IP:="$(ip route | awk '/eth0/ && /src/ { print $NF }')"}
+: ${K8SAGE_K3S_IP:="$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' k8sage-k3s)"}
 
 while ! kubectl get configmap --namespace kube-system coredns 1> /dev/null 2> /dev/null; do
     sleep 1
