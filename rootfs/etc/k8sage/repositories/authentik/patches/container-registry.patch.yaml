@@ -1,0 +1,7 @@
+#- op: add
+#  path: /data
+#  value:
+#    applicationsetcontroller.enable.new.git.file.globbing: "true"
+#    controller.status.processors: "100"
+#    exec.enabled: "true"
+#    users.anonymous.enabled: "true"

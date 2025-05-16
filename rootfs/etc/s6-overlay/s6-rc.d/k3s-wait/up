@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
 
-while ! docker stats --no-stream k8sage-k3s 1> /dev/null 2> /dev/null; do
+while ! docker stats --no-stream k3s 1> /dev/null 2> /dev/null; do
     sleep 1
 done

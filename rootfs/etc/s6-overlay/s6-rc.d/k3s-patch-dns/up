@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 : ${K8SAGE_IP:="$(ip route | awk '/eth0/ && /src/ { print $NF }')"}
-: ${K8SAGE_K3S_IP:="$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' k8sage-k3s)"}
+: ${K8SAGE_K3S_IP:="$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' k3s)"}
 
 while ! kubectl get configmap --namespace kube-system coredns 1> /dev/null 2> /dev/null; do
     sleep 1
@@ -11,6 +11,6 @@ kubectl patch configmap \
     --namespace="kube-system" \
     coredns \
     --type="json" \
-    --patch='[{"op": "replace", "path": "/data/NodeHosts", "value": "'"${K8SAGE_IP} k8sage\n${K8SAGE_K3S_IP} k8sage-k3s"'"}]'
+    --patch='[{"op": "replace", "path": "/data/NodeHosts", "value": "'"${K8SAGE_K3S_IP} k3s\n${K8SAGE_IP} k8sage"'"}]'
 
 kubectl rollout restart deployment --namespace kube-system coredns

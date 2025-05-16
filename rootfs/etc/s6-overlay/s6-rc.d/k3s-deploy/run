@@ -3,7 +3,7 @@
 : ${K3S_VERSION}
 : ${KUBECONFIG}
 
-exec docker run --rm --name="k8sage-k3s" \
+exec docker run --rm --name="k3s" \
     --privileged \
     -v /dev/kmsg:/dev/kmsg:rw \
     -v /var/lib/kubelet:/var/lib/kubelet:rw \
@@ -18,5 +18,5 @@ exec docker run --rm --name="k8sage-k3s" \
     --disable="traefik" \
     --kubelet-arg="eviction-hard=imagefs.available<1%,nodefs.available<1%" \
     --kubelet-arg="eviction-minimum-reclaim=imagefs.available=1%,nodefs.available=1%" \
-    --node-name="k8sage-k3s" \
+    --node-name="k3s" \
     --snapshotter="native"

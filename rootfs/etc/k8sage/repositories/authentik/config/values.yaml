@@ -1,0 +1,17 @@
+authentik:
+  postgresql:
+    password: "!@#$%^&*()_+"
+  secret_key: "!@#$%^&*()_+"
+  web:
+    path: "/auth/"
+
+postgresql:
+  auth:
+    password: "!@#$%^&*()_+"
+  enabled: true
+
+redis:
+  enabled: true
+
+worker:
+  enabled: false

@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+
+metadata:
+  name: authentik-server
+  annotations:
+    nginx.ingress.kubernetes.io/preserve-trailing-slash: "false"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: authentik-server
+                port:
+                  name: http

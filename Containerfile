@@ -69,13 +69,13 @@ ENTRYPOINT ["/entrypoint.sh"]
 
 HEALTHCHECK CMD kubectl get --raw="/readyz?verbose"
 
-# HTTP port
+# HTTP
 EXPOSE 80
 
-# HTTPS port
+# HTTPS
 EXPOSE 443
 
-# API port
+# API
 EXPOSE 6443
 
 VOLUME /var/lib/docker

@@ -5,6 +5,4 @@ set -e
 kubectl config set-context --current --namespace=argo-cd
 
 argocd --core app get nginx --refresh
-argocd --core app get argo-events --refresh
-argocd --core app get argo-rollouts --refresh
-argocd --core app get argo-workflows --refresh
+argocd --core app get authentik --refresh

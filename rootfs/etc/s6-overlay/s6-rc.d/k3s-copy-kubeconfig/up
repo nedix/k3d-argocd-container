@@ -4,4 +4,4 @@
 
 mkdir -p $(dirname "$KUBECONFIG")
 
-docker cp "k8sage-k3s:${KUBECONFIG}" "${KUBECONFIG}"
+docker cp "k3s:${KUBECONFIG}" "${KUBECONFIG}"
