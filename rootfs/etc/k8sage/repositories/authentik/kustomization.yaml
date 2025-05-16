@@ -1,0 +1,27 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: authentik
+
+helmCharts:
+  - name: authentik
+    namespace: authentik
+    releaseName: authentik
+    repo: https://charts.goauthentik.io
+    valuesFile: config/values.yaml
+    version: 2025.4.1
+
+resources:
+  - resources/ingress.yaml
+  - resources/namespace.yaml
+
+patches:
+  - path: patches/container-registry.patch.yaml
+    target:
+      kind: Deployment
+      name: authentik-server
+
+#  - path: https://raw.githubusercontent.com/nedix/argocd-skip-crds-plugin/v0.15.0/manifests/patches/repo-server.patch.yaml
+#    target:
+#      kind: Deployment
+#      name: argocd-repo-server

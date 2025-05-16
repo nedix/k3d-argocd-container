@@ -1,0 +1,12 @@
+authentik:
+  secret_key: "!@#$%^&*()_+"
+  postgresql:
+    password: "!@#$%^&*()_+"
+
+postgresql:
+  enabled: true
+  auth:
+    password: "!@#$%^&*()_+"
+
+redis:
+  enabled: true
